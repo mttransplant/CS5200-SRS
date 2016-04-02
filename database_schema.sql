@@ -82,6 +82,7 @@ create table Instructor
 	id int primary key auto_increment,
 	fName varchar(255),
 	lName varchar(255),
+    email varchar(255),
 	department integer,
 	officeLocation integer,
 	foreign key (officeLocation) references Location(id)
@@ -152,6 +153,53 @@ create index SECCRS_IDX using btree on Section(course);
 create index SECINS_IDX using btree on Section(instructor);
 create index REGSEC_IDX using btree on Registration(section);
 
+/* 
+Create Views for (user:activity)
+Student, Advisor, Registrar: view student data
+*/
+
+-- Create User Accounts
+drop user if exists 'registrar'@'localhost';
+drop user if exists 'admin'@'localhost';
+drop user if exists 'm.jones'@'localhost';
+drop user if exists 'm.harrison'@'localhost';
+drop user if exists 'a.george'@'localhost';
+drop user if exists 's.smith'@'localhost';
+drop user if exists 's.erickson'@'localhost';
+drop user if exists 'l.smith'@'localhost';
+drop user if exists 'r.peter'@'localhost';
+drop user if exists 'j.dave'@'localhost';
+drop user if exists 'd.kaeli'@'localhost';
+drop user if exists 'c.martin'@'localhost';
+drop user if exists 'r.wilson'@'localhost';
+drop user if exists 't.edwards'@'localhost';
+drop user if exists 'f.johnson'@'localhost';
+drop user if exists 'w.moore'@'localhost';
+drop user if exists 'a.williams'@'localhost';
+drop user if exists 'r.gupta'@'localhost';
+drop user if exists 'c.lee'@'localhost';
+
+create user 'registrar'@'localhost' identified by 'regpassword';
+create user 'admin'@'localhost' identified by 'adminpassword';
+create user 'm.jones'@'localhost' identified by 'jones';
+create user 'm.harrison'@'localhost' identified by 'harrison';
+create user 'a.george'@'localhost' identified by 'harrison';
+create user 's.smith'@'localhost' identified by 'smith';
+create user 's.erickson'@'localhost' identified by 'erickson';
+create user 'l.smith'@'localhost' identified by 'smith';
+create user 'r.peter'@'localhost' identified by 'peter';
+create user 'j.dave'@'localhost' identified by 'dave';
+create user 'd.kaeli'@'localhost' identified by 'kaeli';
+create user 'c.martin'@'localhost' identified by 'martin';
+create user 'r.wilson'@'localhost' identified by 'wilson';
+create user 't.edwards'@'localhost' identified by 'edwards';
+create user 'f.johnson'@'localhost' identified by 'johnson';
+create user 'w.moore'@'localhost' identified by 'moore';
+create user 'a.williams'@'localhost' identified by 'williams';
+create user 'r.gupta'@'localhost' identified by 'gupta';
+create user 'c.lee'@'localhost' identified by 'lee';
+
+-- build tables with information
 INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Library', '1 Main Street');
 INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Tower 1', '2 Main Street');
 INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Tower 2', '3 Main Street');
@@ -242,18 +290,18 @@ INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`, `location`) VALUES 
 INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`, `location`) VALUES ('5', 'Law', '6175678912', '64');
 INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`, `location`) VALUES ('6', 'English', '6176789123', '67');
 
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `department`, `officeLocation`) VALUES ('1', 'Lewis', 'Smith', 1, '53');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `department`, `officeLocation`) VALUES ('2', 'Russel', 'Peter', 1, '54');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `department`, `officeLocation`) VALUES ('3', 'John', 'Dave', 6, '68');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `department`, `officeLocation`) VALUES ('4', 'David', 'Kaeli', 4, '62');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `department`, `officeLocation`) VALUES ('5', 'Calvin', 'Martin', 4, '63');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `department`, `officeLocation`) VALUES ('6', 'Roy', 'Wilson', 3, '59');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `department`, `officeLocation`) VALUES ('7', 'Thomas', 'Edwards', 3, '60');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `department`, `officeLocation`) VALUES ('8', 'Freddy', 'Johnson', 6, '69');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `department`, `officeLocation`) VALUES ('9', 'White', 'Moore', 5, '65');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `department`, `officeLocation`) VALUES ('10', 'Ashley', 'Williams', 5, '66');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `department`, `officeLocation`) VALUES ('11', 'Rajat', 'Gupta', 2, '56');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `department`, `officeLocation`) VALUES ('12', 'Chang', 'Lee', 2, '57');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('1', 'Lewis', 'Smith', 'l.smith@school.edu', 1, '53');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('2', 'Russel', 'Peter', 'r.peter@school.edu', 1, '54');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('3', 'John', 'Dave', 'j.dave@school.edu', 6, '68');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('4', 'David', 'Kaeli', 'd.kaeli@school.edu', 4, '62');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('5', 'Calvin', 'Martin', 'c.martin@school.edu', 4, '63');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('6', 'Roy', 'Wilson', 'r.wilson@school.edu', 3, '59');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('7', 'Thomas', 'Edwards', 't.edwards@school.edu', 3, '60');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('8', 'Freddy', 'Johnson', 'f.johnson@school.edu', 6, '69');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('9', 'White', 'Moore', 'w.moore@school.edu', 5, '65');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('10', 'Ashley', 'Williams', 'a.williams@school.edu', 5, '66');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('11', 'Rajat', 'Gupta', 'r.gupta@school.edu', 2, '56');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('12', 'Chang', 'Lee', 'c.lee@school.edu', 2, '57');
 
 INSERT INTO `srs`.`Advisor` (`fName`, `lName`, `email`, `phone`, `location`) VALUES ('Mary', 'Jones', 'm.jones@school.edu', '6175551234', '6');
 INSERT INTO `srs`.`Advisor` (`fName`, `lName`, `email`, `phone`, `location`) VALUES ('Mark', 'Harrison', 'm.harrison@school.edu', '6175551235', '7');
@@ -298,7 +346,7 @@ INSERT INTO `srs`.`course` (`id`, `courseNumber`, `title`, `courseLevel`, `descr
 INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('1', '21', 'Spring 2016', '1');
 INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('1', '22', 'Spring 2016', '2');
 INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('2', '23', 'Spring 2016', '1');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('2', '24', 'Spring', '2');
+INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('2', '24', 'Spring 2016', '2');
 INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('3', '25', 'Spring 2016', '11');
 INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('3', '26', 'Spring 2016', '12');
 INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('4', '27', 'Spring 2016', '11');
@@ -312,3 +360,71 @@ INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VAL
 INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('10', '33', 'Spring 2016', '10');
 INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('11', '34', 'Spring 2016', '3');
 INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('12', '35', 'Spring 2016', '8');
+
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('1', '1');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('1', '2');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('1', '3');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('1', '5');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('2', '1');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('2', '2');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('2', '4');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('3', '1');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('3', '4');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('3', '5');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('4', '1');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('4', '4');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('4', '5');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('4', '6');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('5', '3');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('5', '4');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('5', '5');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('5', '6');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('6', '3');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('6', '4');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('6', '5');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('6', '6');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('7', '3');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('7', '5');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('7', '6');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('7', '7');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('8', '3');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('8', '5');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('8', '6');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('8', '7');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('9', '5');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('9', '8');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('9', '9');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('9', '10');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('10', '5');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('10', '8');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('10', '9');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('10', '11');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('11', '6');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('11', '10');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('11', '11');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('12', '6');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('12', '11');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('12', '12');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('13', '6');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('13', '13');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('13', '15');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('14', '6');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('14', '14');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('15', '8');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('15', '15');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('15', '16');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('15', '17');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('16', '8');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('16', '13');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('16', '15');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('17', '8');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('17', '10');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('18', '8');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('18', '14');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('18', '15');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('19', '8');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('19', '17');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('20', '8');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('20', '10');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('20', '12');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('20', '14');
