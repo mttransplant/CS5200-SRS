@@ -1,4 +1,4 @@
-package servlet;
+package bean;
 
 public class AdminBean {
 private String userName;
@@ -15,5 +15,4 @@ public String getPassword() {
 public void setPassword(String password) {
 	this.password = password;
 }
-
 }

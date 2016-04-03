@@ -41,13 +41,13 @@
 </head>
 <body>
 <div id="header">
-<h1>Add a New Student</h1>
+<h1>Northeastern University</h1>
 </div>
 
 <div id="nav">
-<a href="Add.jsp" target="_self" >Add</a><br>
-<a href="View.jsp">View</a><br>
-<a href="Search.jsp">Search</a><br>
+<a href="AddStudent.jsp">Add Student</a><br>
+<a href="AddAdvisor.jsp">Add Advisor</a><br>
+<a href="AddCourse.jsp">Add Course</a><br>
 
 </div>
 
@@ -56,18 +56,7 @@
 
 <div id="section">
 
-<form name="Add" action="abc.do" method="post">
-<table>
-<tr><td>
-Roll No </td><td>
-<input type="text" name="rollNo"></td></tr>
-<tr><td>
-Name</td><td>
-<input type="text" name="name"></td></tr>
-<tr><td style="text-align:center">
-<input type="submit" value="Add"></td></tr>
-</table>
-</form>
+
 <br>
 <%
 if(request.getAttribute("Successful")!=null)
