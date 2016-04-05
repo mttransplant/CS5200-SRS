@@ -46,7 +46,7 @@ create table Student
 	id int primary key auto_increment,
 	fName varchar(255) not null,
 	lName varchar(255) not null,
-	sID char(8) not null,
+	schoolID char(8) not null,
 	major integer,
 	foreign key (major) references Department(id)
 		on update cascade on delete set null,
@@ -142,6 +142,7 @@ create index BLDADR_IDX using hash on Building(address);
 create index ANAME_IDX using hash on Advisor(lName);
 create index SNAME_IDX using hash on Student(lName);
 create index SMAJ_IDX using btree on Student(major);
+create index SSID_IDX using hash on Student(schoolID);
 create index SSTATE_IDX using btree on Student(state);
 create index SGRAD_IDX using btree on Student(yearOfGraduation);
 create index SADV_IDX using btree on Student(advisor);
@@ -198,6 +199,32 @@ create user 'w.moore'@'localhost' identified by 'moore';
 create user 'a.williams'@'localhost' identified by 'williams';
 create user 'r.gupta'@'localhost' identified by 'gupta';
 create user 'c.lee'@'localhost' identified by 'lee';
+
+-- create views
+create view StudentInfo as
+	select s.schoolID, s.fName as studentFirstName, s.lName as studentLastName, d.name as major, s.address1, s.address2, s.address3, 
+		s.city, s.state, s.postalCode, s.country, s.phoneNumber, a.fName as advisorFirstName, a.lName as advisorLastName, 
+        s.yearOfGraduation, s.livesOncampus
+    from Student s, Department d, Advisor a
+    where s.major = d.id
+		and s.advisor = a.id;
+
+create view StudentTranscript as
+	select s.schoolID, s.fName as studentFirstName, s.lName as studentLastName, sec.semester, c.courseNumber, c.title, r.grade
+    from Student s, Registration r, Section sec, Course c
+    where s.id = r.student
+		and r.section = sec.id
+        and sec.course = c.id;
+
+create view Roster as
+	select c.courseNumber, c.title, sec.semester, s.schoolID, s.fName as studentFirstName, s.lName as studentLastName, d.name as major, r.grade
+    from Instructor i, Section sec, Course c, Registration r, Student s, Department d
+    where i.id = sec.instructor
+		and sec.id = r.section
+        and sec.course = c.id
+        and r.student = s.id
+        and s.major = d.id
+	order by c.courseNumber, s.lName, s.fName;
 
 -- build tables with information
 INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Library', '1 Main Street');
@@ -309,26 +336,26 @@ INSERT INTO `srs`.`Advisor` (`fName`, `lName`, `email`, `phone`, `location`) VAL
 INSERT INTO `srs`.`Advisor` (`fName`, `lName`, `email`, `phone`, `location`) VALUES ('Sam', 'Smith', 's.smith@school.edu', '6175551237', '9');
 INSERT INTO `srs`.`Advisor` (`fName`, `lName`, `email`, `phone`, `location`) VALUES ('Susan', 'Erickson', 's.erickson@school.edu', '6175551238', '10');
 
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Valerie', 'Wilkerson', '69190510', '1', '454 Spruce Avenue', 'Youngstown', 'OH', 'US', '6175551239', '1', '2016','44512');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Clyde', 'Hampton', '50174491', '2', '977 Eagle Road', 'Addison', 'IL', 'US', '6175551240', '2', '2016','60101');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Leo', 'Bennett', '40523365', '3', '98 Hawthorne Avenue', 'Merrick', 'NY', 'US', '6175551241', '3', '2016','11566');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Ralph', 'Holmes', '57863610', '4', '499 Central Avenue', 'Wayne', 'NJ', 'US', '6175551242', '4', '2016','07470');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Kay', 'Taylor', '94537002', '5', '200 Parker Street', 'Adrian', 'MI', 'US', '6175551243', '5', '2016','49221');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Hugh', 'Luna', '87983866', '6', '85 Main Street East', 'Parlin', 'NJ', 'US', '6175551244', '1', '2017','08859');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Lynda', 'Mathis', '61064216', '1', '839 Creekside Drive', 'Downingtown', 'PA', 'US', '6175551245', '2', '2017','19335');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Shawna', 'Lucas', '30505475', '2', '203 Brandywine Drive', 'Lutherville Timonium', 'MD', 'US', '6175551246', '3', '2017','21093');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Jeffrey', 'Warren', '73554027', '3', '326 Buckingham Drive', 'Metarie', 'LA', 'US', '6175551247', '4', '2017','70001');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Wallace', 'Silva', '83348935', '4', '100 Colonial Drive', 'Hamden', 'CT', 'US', '6175551248', '5', '2017','06514');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Chester', 'Jennings', '58969182', '5', '856 Lexington Drive', 'Port Washington', 'NY', 'US', '6175551249', '1', '2018','11050');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Barbara', 'Tate', '46283953', '6', '676 Cemetery Road', 'Camberidge', 'MA', 'US', '6175551250', '2', '2018','02138');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Caroline', 'Gutierrez', '90193483', '1', '263 Route 17 ', 'Warminster', 'PA', 'US', '6175551251', '3', '2018','18974');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Meredith', 'Garza', '53667109', '2', '414 Monroe Street', 'Bozeman', 'MT', 'US', '6175551252', '4', '2018','59715');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Tony', 'Roberson', '60724800', '3', '369 Edgewood Road', 'Palm Harbor', 'FL', 'US', '6175551253', '5', '2018','34683');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Jamie', 'Warner', '34528690', '4', '385 6th Avenue', 'Bellmore', 'NY', 'US', '6175551254', '1', '2019','11710');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Inez', 'Reeves', '84632404', '5', '867 Oxford Court', 'La Porte', 'IN', 'US', '6175551255', '2', '2019','46350');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Timothy', 'Hodges', '83608304', '6', '991 Laurel Drive', 'Glenview', 'IL', 'US', '6175551256', '3', '2019','60025');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Jan', 'Stevenson', '22399936', '1', '964 Devon Court', 'Goldsboro', 'NC', 'US', '6175551257', '4', '2019','27530');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Forrest', 'Jenkins', '88192864', '2', '531 Cleveland Street', 'Littleton', 'CO', 'US', '6175551258', '5', '2019','80123');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Valerie', 'Wilkerson', '69190510', '1', '454 Spruce Avenue', 'Youngstown', 'OH', 'US', '6175551239', '1', '2016','44512');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Clyde', 'Hampton', '50174491', '2', '977 Eagle Road', 'Addison', 'IL', 'US', '6175551240', '2', '2016','60101');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Leo', 'Bennett', '40523365', '3', '98 Hawthorne Avenue', 'Merrick', 'NY', 'US', '6175551241', '3', '2016','11566');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Ralph', 'Holmes', '57863610', '4', '499 Central Avenue', 'Wayne', 'NJ', 'US', '6175551242', '4', '2016','07470');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Kay', 'Taylor', '94537002', '5', '200 Parker Street', 'Adrian', 'MI', 'US', '6175551243', '5', '2016','49221');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Hugh', 'Luna', '87983866', '6', '85 Main Street East', 'Parlin', 'NJ', 'US', '6175551244', '1', '2017','08859');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Lynda', 'Mathis', '61064216', '1', '839 Creekside Drive', 'Downingtown', 'PA', 'US', '6175551245', '2', '2017','19335');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Shawna', 'Lucas', '30505475', '2', '203 Brandywine Drive', 'Lutherville Timonium', 'MD', 'US', '6175551246', '3', '2017','21093');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Jeffrey', 'Warren', '73554027', '3', '326 Buckingham Drive', 'Metarie', 'LA', 'US', '6175551247', '4', '2017','70001');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Wallace', 'Silva', '83348935', '4', '100 Colonial Drive', 'Hamden', 'CT', 'US', '6175551248', '5', '2017','06514');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Chester', 'Jennings', '58969182', '5', '856 Lexington Drive', 'Port Washington', 'NY', 'US', '6175551249', '1', '2018','11050');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Barbara', 'Tate', '46283953', '6', '676 Cemetery Road', 'Camberidge', 'MA', 'US', '6175551250', '2', '2018','02138');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Caroline', 'Gutierrez', '90193483', '1', '263 Route 17 ', 'Warminster', 'PA', 'US', '6175551251', '3', '2018','18974');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Meredith', 'Garza', '53667109', '2', '414 Monroe Street', 'Bozeman', 'MT', 'US', '6175551252', '4', '2018','59715');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Tony', 'Roberson', '60724800', '3', '369 Edgewood Road', 'Palm Harbor', 'FL', 'US', '6175551253', '5', '2018','34683');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Jamie', 'Warner', '34528690', '4', '385 6th Avenue', 'Bellmore', 'NY', 'US', '6175551254', '1', '2019','11710');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Inez', 'Reeves', '84632404', '5', '867 Oxford Court', 'La Porte', 'IN', 'US', '6175551255', '2', '2019','46350');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Timothy', 'Hodges', '83608304', '6', '991 Laurel Drive', 'Glenview', 'IL', 'US', '6175551256', '3', '2019','60025');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Jan', 'Stevenson', '22399936', '1', '964 Devon Court', 'Goldsboro', 'NC', 'US', '6175551257', '4', '2019','27530');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Forrest', 'Jenkins', '88192864', '2', '531 Cleveland Street', 'Littleton', 'CO', 'US', '6175551258', '5', '2019','80123');
 
 INSERT INTO `srs`.`course` (`id`, `courseNumber`, `title`, `courseLevel`, `description`, `department`) VALUES ('1', 'PHYS1000', 'Physics 1', 'undergraduate', 'Designed to enable students to appreciate the role of physics in today\'s society and technology. Emphasis on the fundamental laws of nature on which all science is based.', '1');
 INSERT INTO `srs`.`course` (`id`, `courseNumber`, `title`, `courseLevel`, `description`, `department`) VALUES ('2', 'CHEM5000', 'Chemistry 1', 'graduate', 'This course will explore the ways modern chemists determine the composition and structures of chemicals, with an emphasis on molecules that are found in nature.', '1');
