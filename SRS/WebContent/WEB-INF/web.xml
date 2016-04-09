@@ -27,4 +27,12 @@
     <servlet-name>NewStudent</servlet-name>
     <url-pattern>/addStudent</url-pattern>
   </servlet-mapping>
+   <servlet>
+   <servlet-name>ViewStudentInfo</servlet-name>
+   <servlet-class>servlet.ViewStudentInfo</servlet-class>
+ </servlet>
+ <servlet-mapping>
+   <servlet-name>ViewStudentInfo</servlet-name>
+   <url-pattern>/viewStudent</url-pattern>
+ </servlet-mapping>
 </web-app>

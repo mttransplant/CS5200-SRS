@@ -223,5 +223,115 @@ public class DbConnection {
 		}
 		return majors;
 	}
+	
+	public StudentBean viewStudentInfo(String id)
+	{
+		//int i=0;
+		Connection con = null;
+		String url="jdbc:mysql://localhost:3306/";
+		String dbName ="SRS";
+		String userName= "root";
+		String password= "Mishu123!";
+		StudentBean sbean = new StudentBean();
+		String fName="";
+		String lName = "";
+		String address1="";
+		String address2="";
+		String address3="";
+		String city="";
+		String state="";
+		String country="";
+		String phoneNo = "";
+		int yearOfGraduation = 0;
+		int advisor= 0;
+		String major="";	
+		
+		
+		//String sID = "";
+		
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			con = DriverManager.getConnection(url+dbName,userName,password);
+			//System.out.println("Connected to the databse");
+			PreparedStatement ps=con.prepareStatement( "select * from Student where sID=?");  
+			
+			ps.setString(1, id);
+			
+			ResultSet rs = (ResultSet) ps.executeQuery();
+			
+			//while (rs.next()) {
+			if(rs.next()){	
+				fName = rs.getString("fName");
+				 lName = rs.getString("lName");
+				 address1=rs.getString("address1");
+				 address2=rs.getString("address2");
+				 address3=rs.getString("address3");
+				 city=rs.getString("city");
+				 state=rs.getString("state");
+				 country=rs.getString("country");
+				 major=rs.getString("major");
+				 phoneNo=rs.getString("phoneNumber");
+				 advisor=rs.getInt("advisor");
+				 yearOfGraduation=rs.getInt("yearOfGraduation");
+				 major=rs.getString("major");
+				 
+		     //sID = rs.getString("sID");			}
+			//int b = rs.getInt("age");
+			
+			//request.setAttribute("first",fName);
+		     
+			}
+			
+			sbean.setFirstName(fName);
+			sbean.setLastName(lName);
+			sbean.setAddress1(address1);
+			sbean.setAddress2(address2);
+			sbean.setAddress3(address3);
+			sbean.setCity(city);
+			sbean.setState(state);
+			sbean.setAdvisor(String.valueOf(advisor));
+			sbean.setMajor(major);
+			sbean.setCountry(country);
+			sbean.setPhoneNo(phoneNo);
+			sbean.setYearOfGraduation(yearOfGraduation);
+			
+			//i=ps.executeUpdate();  
+			rs.close();
+		      ps.close();
+		      con.close();
+		      
+		      
+			
+		}
+		catch (SQLException e2) {
+			e2.printStackTrace();
+		} catch (InstantiationException e) {
+
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+
+			e.printStackTrace();
+		}   
+		finally
+		{
+			try {
+
+				con.close();
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+		}
+//		if(i>0)  
+//			return true;
+//		else
+//			return false;
+		return sbean;
+	}  
 
 }
