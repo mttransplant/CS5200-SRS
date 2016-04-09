@@ -158,6 +158,16 @@ create view MyStudentInfo as
 	from StudentInfo s
     where s.username = replace(user(), '@localhost','');
 
+create view MyStudentRegistrations as
+	select r.time_stamp, r.student, r.section, c.courseNumber, c.title, i.fName as instructorFirstName, i.lName as instructorLastName
+    from Student s, Registration r, Section sec, Course c, Instructor i
+    where s.id = r.student
+		and r.section = sec.id
+        and sec.course = c.id
+        and sec.instructor = i.id
+        and s.username = replace(user(), '@localhost','')
+        and r.grade is null;
+
 create view StudentTranscript as
 	select s.schoolID, s.fName as studentFirstName, s.lName as studentLastName, sec.semester, c.courseNumber, 
 		c.title, r.grade, s.username
@@ -190,6 +200,13 @@ create view instRoster as
 	where instUsername = replace(user(), '@localhost','')
     order by r.courseNumber, r.studentLastName, r.studentFirstName;
 
+create view AllSections as
+	select sec.semester, sec.id as sectionID, c.courseNumber, c.title, i.fName as instructorFirstName, i.lName as instructorLastName
+    from Section sec, Course c, Instructor i
+    where sec.course = c.id
+		and sec.instructor = i.id
+	order by sec.semester, c.courseNumber, i.lName;
+
 -- grant instructor permissions
 grant select on srs.Instructor to 'l.smith'@'localhost';
 grant select on srs.Section to 'l.smith'@'localhost';
@@ -205,21 +222,18 @@ grant select on srs.Department to 'wilkerson.v'@'localhost';
 grant select on srs.Advisor to 'wilkerson.v'@'localhost';
 grant select on srs.MyStudentInfo to 'wilkerson.v'@'localhost';
 grant select on srs.MyStudentTranscript to 'wilkerson.v'@'localhost';
+grant select, delete on srs.MyStudentRegistrations to 'wilkerson.v'@'localhost';
+grant select, insert, delete on srs.Registration to 'wilkerson.v'@'localhost';
 
 -- grant advisor permissions
 grant select on srs.* to 'm.jones'@'localhost';
-grant insert, delete on srs.Registration to 'm.jones'@'localhost';
+grant select, insert, delete on srs.Registration to 'm.jones'@'localhost';
 
 -- grant registrar permissions
 grant all on srs.* to 'registrar'@'localhost';
 
 -- grant admin permissions
 grant all on srs.* to 'admin'@'localhost' with grant option;
-
--- registrar: update on all tables
--- students: view on Student, Department, Advisor
--- students: upate on Registration
--- Student Info: students, advisors, admin, registrar: View on Student, Department, Advisor. 
 
 -- build tables with information
 INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`) VALUES ('1', 'Science', '6171234567');
@@ -301,42 +315,42 @@ INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('11', '
 INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('12', 'Spring 2016', '8');
 
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('1', '1');
-INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('1', '2');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('1', '3');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('1', '5');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('1', '7');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('2', '1');
-INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('2', '2');
-INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('2', '4');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('2', '3');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('2', '7');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('3', '1');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('3', '4');
-INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('3', '5');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('3', '6');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('4', '1');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('4', '4');
-INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('4', '5');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('4', '6');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('4', '7');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('5', '3');
-INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('5', '4');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('5', '5');
-INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('5', '6');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('5', '7');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('5', '9');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('6', '3');
-INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('6', '4');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('6', '5');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('6', '6');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('6', '8');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('7', '3');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('7', '5');
-INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('7', '6');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('7', '7');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('7', '8');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('8', '3');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('8', '5');
-INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('8', '6');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('8', '7');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('8', '8');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('9', '5');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('9', '8');
-INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('9', '9');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('9', '10');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('9', '11');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('10', '5');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('10', '8');
-INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('10', '9');
+INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('10', '10');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('10', '11');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('11', '6');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('11', '10');
