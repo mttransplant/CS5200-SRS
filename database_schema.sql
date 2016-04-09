@@ -158,6 +158,11 @@ create view MyStudentInfo as
 	from StudentInfo s
     where s.username = replace(user(), '@localhost','');
 
+create view UpdateMyStudentInfo as
+	select s.fName, s.address1, s.address2, s.address3, s.city, s.state, s.postalCode, s.country, s.phoneNumber
+    from Student s
+    where s.username = replace(user(), '@localhost','');
+
 create view MyStudentRegistrations as
 	select r.time_stamp, r.student, r.section, c.courseNumber, c.title, i.fName as instructorFirstName, i.lName as instructorLastName
     from Student s, Registration r, Section sec, Course c, Instructor i
@@ -224,6 +229,7 @@ grant select on srs.MyStudentInfo to 'wilkerson.v'@'localhost';
 grant select on srs.MyStudentTranscript to 'wilkerson.v'@'localhost';
 grant select, delete on srs.MyStudentRegistrations to 'wilkerson.v'@'localhost';
 grant select, insert, delete on srs.Registration to 'wilkerson.v'@'localhost';
+grant update on srs.UpdateMyStudentInfo to 'wilkerson.v'@'localhost';
 
 -- grant advisor permissions
 grant select on srs.* to 'm.jones'@'localhost';
