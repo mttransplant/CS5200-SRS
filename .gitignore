@@ -1,7 +1,7 @@
 *.class
 
-SRS/.classpath
-SRS/.settings
+*.classpath
+*.settings
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
