@@ -224,32 +224,38 @@ create view AdvisorAdvisees as
 		and a.username = replace(user(), '@localhost','');
 
 -- grant instructor permissions
-grant select on srs.Instructor to 'l.smith'@'localhost';
-grant select on srs.Section to 'l.smith'@'localhost';
-grant select on srs.Course to 'l.smith'@'localhost';
-grant select on srs.Registration to 'l.smith'@'localhost';
-grant select on srs.Student to 'l.smith'@'localhost';
-grant select on srs.Department to 'l.smith'@'localhost';
-grant select on srs.InstructorRoster to 'l.smith'@'localhost';
-grant select, update (grade) on srs.InstructorSetGrade to 'l.smith'@'localhost';
+grant select on Instructor to 'l.smith'@'localhost';
+grant select on Section to 'l.smith'@'localhost';
+grant select on Course to 'l.smith'@'localhost';
+grant select on Registration to 'l.smith'@'localhost';
+grant select on Student to 'l.smith'@'localhost';
+grant select on Department to 'l.smith'@'localhost';
+grant select on InstructorRoster to 'l.smith'@'localhost';
+grant select, update (grade) on InstructorSetGrade to 'l.smith'@'localhost';
 
 -- grant student permissions
-grant select on srs.Student to 'wilkerson.v'@'localhost';
-grant select on srs.Department to 'wilkerson.v'@'localhost';
-grant select on srs.Advisor to 'wilkerson.v'@'localhost';
-grant select on srs.MyStudentInfo to 'wilkerson.v'@'localhost';
-grant select on srs.MyStudentTranscript to 'wilkerson.v'@'localhost';
-grant select, delete on srs.MyStudentRegistrations to 'wilkerson.v'@'localhost';
-grant select, insert, delete on srs.Registration to 'wilkerson.v'@'localhost';
-grant update on srs.UpdateMyStudentInfo to 'wilkerson.v'@'localhost';
+grant select on Student to 'wilkerson.v'@'localhost';
+grant select on Department to 'wilkerson.v'@'localhost';
+grant select on Advisor to 'wilkerson.v'@'localhost';
+grant select on MyStudentInfo to 'wilkerson.v'@'localhost';
+grant select on MyStudentTranscript to 'wilkerson.v'@'localhost';
+grant select, delete on MyStudentRegistrations to 'wilkerson.v'@'localhost';
+grant select, insert, delete on Registration to 'wilkerson.v'@'localhost';
+grant update on UpdateMyStudentInfo to 'wilkerson.v'@'localhost';
 
 -- grant advisor permissions
 grant select on srs.* to 'm.jones'@'localhost';
-grant select, insert, delete on srs.Registration to 'm.jones'@'localhost';
-grant select on srs.AdvisorAdvisees to 'm.jones'@'localhost';
+grant select, insert, delete on Registration to 'm.jones'@'localhost';
 
 -- grant registrar permissions
-grant all on srs.* to 'registrar'@'localhost';
+grant select, delete, insert, update on Advisor to 'registrar'@'localhost';
+grant select, delete, insert, update on Course to 'registrar'@'localhost';
+grant select, delete, insert, update on Department to 'registrar'@'localhost';
+grant select, delete, insert, update on Instructor to 'registrar'@'localhost';
+grant select, delete, insert, update on Registration to 'registrar'@'localhost';
+grant select, delete, insert, update on Section to 'registrar'@'localhost';
+grant select, delete, insert, update on Student to 'registrar'@'localhost';
+-- revoke drop on srs.* from 'registrar'@'localhost';
 
 -- grant admin permissions
 grant all on srs.* to 'admin'@'localhost' with grant option;
