@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@page import="java.util.ArrayList"%>
+    <%@page import="java.util.Iterator"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -18,13 +20,29 @@
 <td> <input type="text" name="lName"></td>
 </tr>
 <tr>
-<td> Student Id </td>
-<td> <input type="text" name="id"></td>
+<td> Email </td>
+<td> <input type="text" name="email"></td>
 </tr>
 <tr>
 <td> Major </td>
-<td> <input type="text" name="major"> </td>
-</tr>
+<td>
+<select name="major">
+<% 
+if(request.getAttribute("majors")!=null)
+{
+	ArrayList<Integer> majors = (ArrayList<Integer>)request.getAttribute("majors");
+	Iterator<Integer> iterator = majors.iterator();
+	while(iterator.hasNext())
+	{
+		Integer major = iterator.next();
+		%>
+		<option value = "<%=major%>"><%=major%></option>
+		<% } %>
+</select>
+	<%
+}
+%>
+</td></tr>
 <tr>
 <td> Address1 </td>
 <td> <input type="text" name="address1"> </td>
@@ -59,8 +77,24 @@
 </tr>
 <tr>
 <td> Advisor </td>
-<td> <input type="text" name="advisor"> </td>
-</tr>
+<td>
+<select name="advisor">
+<% 
+if(request.getAttribute("result")!=null)
+{
+	ArrayList<Integer> advisors = (ArrayList<Integer>)request.getAttribute("result");
+	Iterator<Integer> iterator = advisors.iterator();
+	while(iterator.hasNext())
+	{
+		Integer advisor = iterator.next();
+		%>
+		<option value = "<%=advisor%>"><%=advisor%></option>
+		<% } %>
+</select>
+	<%
+}
+%>
+</td></tr>
 <tr>
 <td> Year Of Graduation </td>
 <td> <input type="text" name="year"> </td>

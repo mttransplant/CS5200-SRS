@@ -41,9 +41,7 @@
 	id int primary key auto_increment,
  	fName varchar(255) not null,
 	lName varchar(255) not null,
-	email varchar(255),
+	email varchar(255) unique,
 	phone varchar(10),
-	location integer,
-	foreign key (location) references Location(id)
-		on update cascade on delete set null
+	username varchar(255)
 ); -->

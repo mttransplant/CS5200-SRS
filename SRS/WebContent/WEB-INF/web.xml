@@ -17,6 +17,14 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>AddStudent</servlet-name>
+    <url-pattern>/addNewStudent</url-pattern>
+  </servlet-mapping>
+   <servlet>
+    <servlet-name>NewStudent</servlet-name>
+    <servlet-class>servlet.NewStudent</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NewStudent</servlet-name>
     <url-pattern>/addStudent</url-pattern>
   </servlet-mapping>
 </web-app>

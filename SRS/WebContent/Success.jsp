@@ -45,7 +45,7 @@
 </div>
 
 <div id="nav">
-<a href="AddStudent.jsp">Add Student</a><br>
+<a href="AddNewStudent.jsp">Add Student</a><br>
 <a href="AddAdvisor.jsp">Add Advisor</a><br>
 <a href="AddCourse.jsp">Add Course</a><br>
 

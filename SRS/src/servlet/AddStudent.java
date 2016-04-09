@@ -1,6 +1,8 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,44 +42,12 @@ public class AddStudent extends HttpServlet {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
 		response.setContentType("text/html");  
-		StudentBean studentBean = new StudentBean();
-		System.out.println("enter");
-		Boolean result = false;
-		studentBean.setFirstName(request.getParameter("fName"));
-		studentBean.setLastName(request.getParameter("lName"));
-		studentBean.setStudentId(request.getParameter("id"));
-		studentBean.setAddress1(request.getParameter("address1"));
-		studentBean.setAddress2(request.getParameter("address2"));
-		studentBean.setAddress3(request.getParameter("address3"));
-		studentBean.setCity(request.getParameter("city"));
-		studentBean.setCountry(request.getParameter("country"));
-		studentBean.setMajor(request.getParameter("major"));
-		studentBean.setPhoneNo(request.getParameter("phone"));
-		
-		System.out.println("phone");
-		studentBean.setLivesOnCampus(Boolean.getBoolean(request.getParameter("campus")));
-		studentBean.setYearOfGraduation(Integer.parseInt(request.getParameter("year")));
-		studentBean.setState(request.getParameter("state"));
-		studentBean.setPostal(Long.parseLong(request.getParameter("postal")));
-		studentBean.setAdvisor(Integer.parseInt(request.getParameter("advisor")));
-		
 		DbConnection connection = new DbConnection();
-		result = connection.insertStudent(studentBean);
-		if(result)
-		{
-			request.setAttribute("result",result);
-			request.setAttribute("Successful", "Student successfully inserted.");
-		}
-		else
-		{
-			request.setAttribute("result", result);
-			request.setAttribute("Failure", "Student not inserted successfully.");
-		}
-		request.getRequestDispatcher("/Success.jsp").forward(request, response);
-		
-		
-		
-		
+		ArrayList<Integer> advisors = connection.getAdvisor();
+		ArrayList<Integer> majors = connection.getDepartment();
+		request.setAttribute("result", advisors);
+		request.setAttribute("majors", majors);
+		request.getRequestDispatcher("/AddStudent.jsp").forward(request, response);
 	}
 
 }

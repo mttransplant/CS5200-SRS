@@ -3,8 +3,14 @@ package bean;
 public class StudentBean {
 private String firstName;
 private String lastName;
-private String studentId;
 private String major;
+private String Email;
+public String getEmail() {
+	return Email;
+}
+public void setEmail(String email) {
+	Email = email;
+}
 private String address1;
 private String address2;
 private String address3;
@@ -13,9 +19,9 @@ private String state;
 private long postal;
 private String country;
 private String phoneNo;
-private int advisor;
+private String advisor;
 private int yearOfGraduation;
-private boolean livesOnCampus;
+private String livesOnCampus;
 
 public String getFirstName() {
 	return firstName;
@@ -28,12 +34,6 @@ public String getLastName() {
 }
 public void setLastName(String lastName) {
 	this.lastName = lastName;
-}
-public String getStudentId() {
-	return studentId;
-}
-public void setStudentId(String studentId) {
-	this.studentId = studentId;
 }
 public String getMajor() {
 	return major;
@@ -89,10 +89,10 @@ public String getPhoneNo() {
 public void setPhoneNo(String phoneNo) {
 	this.phoneNo = phoneNo;
 }
-public int getAdvisor() {
+public String getAdvisor() {
 	return advisor;
 }
-public void setAdvisor(int advisor) {
+public void setAdvisor(String advisor) {
 	this.advisor = advisor;
 }
 public int getYearOfGraduation() {
@@ -101,10 +101,10 @@ public int getYearOfGraduation() {
 public void setYearOfGraduation(int yearOfGraduation) {
 	this.yearOfGraduation = yearOfGraduation;
 }
-public boolean isLivesOnCampus() {
+public String isLivesOnCampus() {
 	return livesOnCampus;
 }
-public void setLivesOnCampus(boolean livesOnCampus) {
+public void setLivesOnCampus(String livesOnCampus) {
 	this.livesOnCampus = livesOnCampus;
 }
 
