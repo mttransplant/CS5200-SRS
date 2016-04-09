@@ -2,31 +2,29 @@ drop database if exists SRS;
 create database SRS;
 use SRS;
 
-create table Building
-(
-	id int primary key auto_increment,
-	name varchar(255),
-	address varchar(255)
-	
-);
+-- Clean up Accounts
+drop user if exists 'registrar'@'localhost';
+drop user if exists 'admin'@'localhost';
+drop user if exists 'm.jones'@'localhost';
+drop user if exists 'l.smith'@'localhost';
+drop user if exists 'wilkerson.v'@'localhost';
 
-create table Location
-(
-	id int primary key auto_increment,
-	building int not null,
-	foreign key(building) references Building(id)
-		on update cascade on delete cascade,
-	room_no varchar(250) not null
-);
+-- create super users
+create user 'registrar'@'localhost' identified by 'registrar';
+create user 'admin'@'localhost' identified by 'admin';
+-- create 1 student
+create user 'wilkerson.v'@'localhost' identified by 'wilkerson';
+-- create 1 instructor
+create user 'l.smith'@'localhost' identified by 'smith';
+-- create 1 advisor
+create user 'm.jones'@'localhost' identified by 'jones';
 
+-- create tables
 create table Department
 (
 	id int primary key auto_increment,
 	name varchar(255) not null,
-	phoneNumber varchar(10),
-	location int,
-	foreign key (location) references Location(id)
-		on update cascade on delete no action
+	phoneNumber varchar(10)
 );
 
 Create table Advisor
@@ -34,11 +32,9 @@ Create table Advisor
 	id int primary key auto_increment,
  	fName varchar(255) not null,
 	lName varchar(255) not null,
-	email varchar(255),
+	email varchar(255) unique,
 	phone varchar(10),
-	location integer,
-	foreign key (location) references Location(id)
-		on update cascade on delete set null
+	username varchar(255)
 );
 
 create table Student 
@@ -47,6 +43,7 @@ create table Student
 	fName varchar(255) not null,
 	lName varchar(255) not null,
 	schoolID char(8) not null,
+    email varchar(255) unique,
 	major integer,
 	foreign key (major) references Department(id)
 		on update cascade on delete set null,
@@ -62,7 +59,8 @@ create table Student
 	foreign key (advisor) references Advisor(id)
 		on update cascade on delete set null,
 	yearOfGraduation integer,
-	livesOncampus enum('No','Yes') not null
+	livesOncampus enum('No','Yes') not null,
+    username varchar(255) unique
 	);
 
 create table Course
@@ -80,25 +78,21 @@ create table Course
 create table Instructor
 (
 	id int primary key auto_increment,
-	fName varchar(255),
-	lName varchar(255),
-    email varchar(255),
+	fName varchar(255) not null,
+	lName varchar(255) not null,
+    email varchar(255) unique,
 	department integer,
-	officeLocation integer,
-	foreign key (officeLocation) references Location(id)
-		on update cascade on delete cascade
-	
+	username varchar(255) unique
 );
 
 create table Section
 	(
 	id int primary key auto_increment,
 	course int,
-	location int,
-	semester varchar(255),
-	instructor int,
 	foreign key (course) references Course(id) 
-		on update cascade on delete no action
+		on update cascade on delete no action,
+	semester varchar(255),
+	instructor int
 );
 
 create table Registration 
@@ -114,20 +108,7 @@ create table Registration
 	primary key (student, section)
 );
 
-Create table OnCampusHousing
-(
-	id int primary key,
-	student int,
-	foreign key (student) references Student(id)
-		on update cascade on delete no action,
-	location int,
-	foreign key (location) references Location(id)
-		on update cascade on delete no action
-);
-
--- create indexes for all primary keys
-create unique index BLD_IDX using hash on Building(id);
-create unique index LOC_IDX using hash on Location(id);
+-- create indexes for all primary keys and unique fields
 create unique index DEPT_IDX using hash on Department(id);
 create unique index ADV_IDX using hash on Advisor(id);
 create unique index STDNT_IDX using hash on Student(id);
@@ -135,10 +116,11 @@ create unique index CRS_IDX using hash on Course(id);
 create unique index INST_IDX using hash on Instructor(id);
 create unique index SECT_IDX using hash on Section(id);
 create unique index REG_IDX using btree on Registration(student,section);
-create unique index OCH_IDX using hash on OnCampusHousing(id);
+create unique index INST_UNAME_IDX using hash on Instructor(username);
+create unique index ADV_UNAME_IDX using hash on Advisor(username);
+create unique index STDNT_UNAM_IDX using hash on Student(username);
 
 -- create indexes for common searches
-create index BLDADR_IDX using hash on Building(address);
 create index ANAME_IDX using hash on Advisor(lName);
 create index SNAME_IDX using hash on Student(lName);
 create index SMAJ_IDX using btree on Student(major);
@@ -159,65 +141,41 @@ Create Views for (user:activity)
 Student, Advisor, Registrar: view student data
 */
 
--- Create User Accounts
-drop user if exists 'registrar'@'localhost';
-drop user if exists 'admin'@'localhost';
-drop user if exists 'm.jones'@'localhost';
-drop user if exists 'm.harrison'@'localhost';
-drop user if exists 'a.george'@'localhost';
-drop user if exists 's.smith'@'localhost';
-drop user if exists 's.erickson'@'localhost';
-drop user if exists 'l.smith'@'localhost';
-drop user if exists 'r.peter'@'localhost';
-drop user if exists 'j.dave'@'localhost';
-drop user if exists 'd.kaeli'@'localhost';
-drop user if exists 'c.martin'@'localhost';
-drop user if exists 'r.wilson'@'localhost';
-drop user if exists 't.edwards'@'localhost';
-drop user if exists 'f.johnson'@'localhost';
-drop user if exists 'w.moore'@'localhost';
-drop user if exists 'a.williams'@'localhost';
-drop user if exists 'r.gupta'@'localhost';
-drop user if exists 'c.lee'@'localhost';
-
-create user 'registrar'@'localhost' identified by 'regpassword';
-create user 'admin'@'localhost' identified by 'adminpassword';
-create user 'm.jones'@'localhost' identified by 'jones';
-create user 'm.harrison'@'localhost' identified by 'harrison';
-create user 'a.george'@'localhost' identified by 'harrison';
-create user 's.smith'@'localhost' identified by 'smith';
-create user 's.erickson'@'localhost' identified by 'erickson';
-create user 'l.smith'@'localhost' identified by 'smith';
-create user 'r.peter'@'localhost' identified by 'peter';
-create user 'j.dave'@'localhost' identified by 'dave';
-create user 'd.kaeli'@'localhost' identified by 'kaeli';
-create user 'c.martin'@'localhost' identified by 'martin';
-create user 'r.wilson'@'localhost' identified by 'wilson';
-create user 't.edwards'@'localhost' identified by 'edwards';
-create user 'f.johnson'@'localhost' identified by 'johnson';
-create user 'w.moore'@'localhost' identified by 'moore';
-create user 'a.williams'@'localhost' identified by 'williams';
-create user 'r.gupta'@'localhost' identified by 'gupta';
-create user 'c.lee'@'localhost' identified by 'lee';
 
 -- create views
 create view StudentInfo as
-	select s.schoolID, s.fName as studentFirstName, s.lName as studentLastName, d.name as major, s.address1, s.address2, s.address3, 
-		s.city, s.state, s.postalCode, s.country, s.phoneNumber, a.fName as advisorFirstName, a.lName as advisorLastName, 
-        s.yearOfGraduation, s.livesOncampus
+	select s.schoolID, s.fName as studentFirstName, s.lName as studentLastName, d.name as major, 
+		s.address1, s.address2, s.address3, s.city, s.state, s.postalCode, s.country, s.phoneNumber, 
+        a.fName as advisorFirstName, a.lName as advisorLastName, s.yearOfGraduation, s.livesOnCampus, s.username
     from Student s, Department d, Advisor a
     where s.major = d.id
 		and s.advisor = a.id;
 
+create view MyStudentInfo as
+	select s.schoolID, s.studentFirstName, s.studentLastName, s.major, s.address1, s.address2, s.address3, s.city,
+		s.state, s.postalCode, s.country, s.phoneNumber, s.advisorFirstName, s.advisorLastName, s.yearOfGraduation,
+        s.livesOnCampus
+	from StudentInfo s
+    where s.username = replace(user(), '@localhost','');
+
 create view StudentTranscript as
-	select s.schoolID, s.fName as studentFirstName, s.lName as studentLastName, sec.semester, c.courseNumber, c.title, r.grade
+	select s.schoolID, s.fName as studentFirstName, s.lName as studentLastName, sec.semester, c.courseNumber, 
+		c.title, r.grade, s.username
     from Student s, Registration r, Section sec, Course c
     where s.id = r.student
 		and r.section = sec.id
         and sec.course = c.id;
+	-- note: Will need to call this through an SQL query generated by the jsp where the schoolID is provided by the web page.
+    -- The web page will need to provide the schoolID based on the logged in student, or by the schoolID provided
+    -- by the admin, registrar, or advisor
+
+create view MyStudentTranscript as
+	select *
+    from StudentTranscript s 
+    where s.username = replace(user(), '@localhost','');
 
 create view Roster as
-	select c.courseNumber, c.title, sec.semester, s.schoolID, s.fName as studentFirstName, s.lName as studentLastName, d.name as major, r.grade
+	select sec.id as sectionID, c.courseNumber, c.title, sec.semester, s.schoolID as studentID, s.fName as studentFirstName, s.lName as studentLastName, d.name as major, r.grade, i.fName as instructorFirstName, i.lName as instructorLastName, i.username as instUsername
     from Instructor i, Section sec, Course c, Registration r, Student s, Department d
     where i.id = sec.instructor
 		and sec.id = r.section
@@ -226,136 +184,90 @@ create view Roster as
         and s.major = d.id
 	order by c.courseNumber, s.lName, s.fName;
 
+create view instRoster as
+	select r.sectionID, r.courseNumber, r.title, r.semester, r.studentID, r.studentFirstName, r.studentLastName, r.major, r.grade, r.instructorFirstName, r.instructorLastName
+    from Roster r
+	where instUsername = replace(user(), '@localhost','')
+    order by r.courseNumber, r.studentLastName, r.studentFirstName;
+
+-- grant instructor permissions
+grant select on srs.Instructor to 'l.smith'@'localhost';
+grant select on srs.Section to 'l.smith'@'localhost';
+grant select on srs.Course to 'l.smith'@'localhost';
+grant select on srs.Registration to 'l.smith'@'localhost';
+grant select on srs.Student to 'l.smith'@'localhost';
+grant select on srs.Department to 'l.smith'@'localhost';
+grant select on srs.instRoster to 'l.smith'@'localhost';
+
+-- grant student permissions
+grant select on srs.Student to 'wilkerson.v'@'localhost';
+grant select on srs.Department to 'wilkerson.v'@'localhost';
+grant select on srs.Advisor to 'wilkerson.v'@'localhost';
+grant select on srs.MyStudentInfo to 'wilkerson.v'@'localhost';
+grant select on srs.MyStudentTranscript to 'wilkerson.v'@'localhost';
+
+-- grant advisor permissions
+grant select on srs.* to 'm.jones'@'localhost';
+grant insert, delete on srs.Registration to 'm.jones'@'localhost';
+
+-- grant registrar permissions
+grant all on srs.* to 'registrar'@'localhost';
+
+-- grant admin permissions
+grant all on srs.* to 'admin'@'localhost' with grant option;
+
+-- registrar: update on all tables
+-- students: view on Student, Department, Advisor
+-- students: upate on Registration
+-- Student Info: students, advisors, admin, registrar: View on Student, Department, Advisor. 
+
 -- build tables with information
-INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Library', '1 Main Street');
-INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Tower 1', '2 Main Street');
-INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Tower 2', '3 Main Street');
-INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Student Center', '4 Main Street');
-INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Classroom Building 1', '5 Main Street');
-INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Classroom Building 2', '6 Main Street');
-INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Classroom Building 3', '7 Main Street');
-INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Dorm 1', '8 Main Street');
-INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Dorm 2', '9 Main Street');
-INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Dorm 3', '10 Main Street');
-INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Dining Hall', '11 Main Street');
-INSERT INTO `SRS`.`Building` (`name`, `address`) VALUES ('Department Building', '12 Main Street');
+INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`) VALUES ('1', 'Science', '6171234567');
+INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`) VALUES ('2', 'Mathematics', '6172345678');
+INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`) VALUES ('3', 'Physical Education', '6173456789');
+INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`) VALUES ('4', 'Engineering', '6174567891');
+INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`) VALUES ('5', 'Law', '6175678912');
+INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`) VALUES ('6', 'English', '6176789123');
 
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (1,'1000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (1,'1050');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (1,'1100');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (1,'1150');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (1,'1200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (2,'1000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (2,'1050');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (2,'1100');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (2,'1150');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (2,'1200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (3,'1000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (3,'1050');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (3,'1100');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (3,'1150');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (3,'1200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (4,'1000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (4,'1050');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (4,'1100');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (4,'1150');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (4,'1200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (5,'1000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (5,'1050');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (5,'1100');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (5,'1150');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (5,'1200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (6,'1000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (6,'1050');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (6,'1100');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (6,'1150');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (6,'1200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (7,'1000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (7,'1050');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (7,'1100');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (7,'1150');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (7,'1200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (8,'1000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (8,'1050');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (8,'1100');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (8,'1150');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (8,'1200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (9,'1000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (9,'1050');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (9,'1100');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (9,'1150');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (9,'1200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (10,'1000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (10,'1050');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (10,'1100');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (10,'1150');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (10,'1200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (11,'1000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'1000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'1200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'1300');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'2000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'2200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'2300');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'3000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'3200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'3300');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'4000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'4200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'4300');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'5000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'5200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'5300');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'6000');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'6200');
-INSERT INTO `SRS`.`Location` (`building`, `room_no`) VALUES (12,'6300');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `username`) VALUES ('1', 'Lewis', 'Smith', 'l.smith@school.edu', 1, 'l.smith');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `username`) VALUES ('2', 'Russel', 'Peter', 'r.peter@school.edu', 1, 'r.peter');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `username`) VALUES ('3', 'John', 'Dave', 'j.dave@school.edu', 6, 'j.dave');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `username`) VALUES ('4', 'David', 'Kaeli', 'd.kaeli@school.edu', 4, 'd.kaeli');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `username`) VALUES ('5', 'Calvin', 'Martin', 'c.martin@school.edu', 4, 'c.martin');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `username`) VALUES ('6', 'Roy', 'Wilson', 'r.wilson@school.edu', 3, 'r.wilson');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `username`) VALUES ('7', 'Thomas', 'Edwards', 't.edwards@school.edu', 3, 't.edwards');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `username`) VALUES ('8', 'Freddy', 'Johnson', 'f.johnson@school.edu', 6, 'f.johnson');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `username`) VALUES ('9', 'White', 'Moore', 'w.moore@school.edu', 5, 'w.moore');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `username`) VALUES ('10', 'Ashley', 'Williams', 'a.williams@school.edu', 5, 'a.williams');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `username`) VALUES ('11', 'Rajat', 'Gupta', 'r.gupta@school.edu', 2, 'r.gupta');
+INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `username`) VALUES ('12', 'Chang', 'Lee', 'c.lee@school.edu', 2, 'c.lee');
 
-INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`, `location`) VALUES ('1', 'Science', '6171234567', '52');
-INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`, `location`) VALUES ('2', 'Mathematics', '6172345678', '55');
-INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`, `location`) VALUES ('3', 'Physical Education', '6173456789', '58');
-INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`, `location`) VALUES ('4', 'Engineering', '6174567891', '61');
-INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`, `location`) VALUES ('5', 'Law', '6175678912', '64');
-INSERT INTO `srs`.`department` (`id`, `name`, `phoneNumber`, `location`) VALUES ('6', 'English', '6176789123', '67');
+INSERT INTO `srs`.`Advisor` (`fName`, `lName`, `email`, `phone`, `username`) VALUES ('Mary', 'Jones', 'm.jones@school.edu', '6175551234','m.jones');
+INSERT INTO `srs`.`Advisor` (`fName`, `lName`, `email`, `phone`, `username`) VALUES ('Mark', 'Harrison', 'm.harrison@school.edu', '6175551235', 'm.harrison');
+INSERT INTO `srs`.`Advisor` (`fName`, `lName`, `email`, `phone`, `username`) VALUES ('Anna', 'George', 'a.george@school.edu', '6175551236', 'a.george');
+INSERT INTO `srs`.`Advisor` (`fName`, `lName`, `email`, `phone`, `username`) VALUES ('Sam', 'Smith', 's.smith@school.edu', '6175551237', 's.smith');
+INSERT INTO `srs`.`Advisor` (`fName`, `lName`, `email`, `phone`, `username`) VALUES ('Susan', 'Erickson', 's.erickson@school.edu', '6175551238', 's.erickson');
 
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('1', 'Lewis', 'Smith', 'l.smith@school.edu', 1, '53');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('2', 'Russel', 'Peter', 'r.peter@school.edu', 1, '54');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('3', 'John', 'Dave', 'j.dave@school.edu', 6, '68');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('4', 'David', 'Kaeli', 'd.kaeli@school.edu', 4, '62');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('5', 'Calvin', 'Martin', 'c.martin@school.edu', 4, '63');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('6', 'Roy', 'Wilson', 'r.wilson@school.edu', 3, '59');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('7', 'Thomas', 'Edwards', 't.edwards@school.edu', 3, '60');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('8', 'Freddy', 'Johnson', 'f.johnson@school.edu', 6, '69');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('9', 'White', 'Moore', 'w.moore@school.edu', 5, '65');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('10', 'Ashley', 'Williams', 'a.williams@school.edu', 5, '66');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('11', 'Rajat', 'Gupta', 'r.gupta@school.edu', 2, '56');
-INSERT INTO `srs`.`instructor` (`id`, `fName`, `lName`, `email`, `department`, `officeLocation`) VALUES ('12', 'Chang', 'Lee', 'c.lee@school.edu', 2, '57');
-
-INSERT INTO `srs`.`Advisor` (`fName`, `lName`, `email`, `phone`, `location`) VALUES ('Mary', 'Jones', 'm.jones@school.edu', '6175551234', '6');
-INSERT INTO `srs`.`Advisor` (`fName`, `lName`, `email`, `phone`, `location`) VALUES ('Mark', 'Harrison', 'm.harrison@school.edu', '6175551235', '7');
-INSERT INTO `srs`.`Advisor` (`fName`, `lName`, `email`, `phone`, `location`) VALUES ('Anna', 'George', 'a.george@school.edu', '6175551236', '8');
-INSERT INTO `srs`.`Advisor` (`fName`, `lName`, `email`, `phone`, `location`) VALUES ('Sam', 'Smith', 's.smith@school.edu', '6175551237', '9');
-INSERT INTO `srs`.`Advisor` (`fName`, `lName`, `email`, `phone`, `location`) VALUES ('Susan', 'Erickson', 's.erickson@school.edu', '6175551238', '10');
-
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Valerie', 'Wilkerson', '69190510', '1', '454 Spruce Avenue', 'Youngstown', 'OH', 'US', '6175551239', '1', '2016','44512');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Clyde', 'Hampton', '50174491', '2', '977 Eagle Road', 'Addison', 'IL', 'US', '6175551240', '2', '2016','60101');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Leo', 'Bennett', '40523365', '3', '98 Hawthorne Avenue', 'Merrick', 'NY', 'US', '6175551241', '3', '2016','11566');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Ralph', 'Holmes', '57863610', '4', '499 Central Avenue', 'Wayne', 'NJ', 'US', '6175551242', '4', '2016','07470');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Kay', 'Taylor', '94537002', '5', '200 Parker Street', 'Adrian', 'MI', 'US', '6175551243', '5', '2016','49221');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Hugh', 'Luna', '87983866', '6', '85 Main Street East', 'Parlin', 'NJ', 'US', '6175551244', '1', '2017','08859');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Lynda', 'Mathis', '61064216', '1', '839 Creekside Drive', 'Downingtown', 'PA', 'US', '6175551245', '2', '2017','19335');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Shawna', 'Lucas', '30505475', '2', '203 Brandywine Drive', 'Lutherville Timonium', 'MD', 'US', '6175551246', '3', '2017','21093');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Jeffrey', 'Warren', '73554027', '3', '326 Buckingham Drive', 'Metarie', 'LA', 'US', '6175551247', '4', '2017','70001');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Wallace', 'Silva', '83348935', '4', '100 Colonial Drive', 'Hamden', 'CT', 'US', '6175551248', '5', '2017','06514');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Chester', 'Jennings', '58969182', '5', '856 Lexington Drive', 'Port Washington', 'NY', 'US', '6175551249', '1', '2018','11050');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Barbara', 'Tate', '46283953', '6', '676 Cemetery Road', 'Camberidge', 'MA', 'US', '6175551250', '2', '2018','02138');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Caroline', 'Gutierrez', '90193483', '1', '263 Route 17 ', 'Warminster', 'PA', 'US', '6175551251', '3', '2018','18974');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Meredith', 'Garza', '53667109', '2', '414 Monroe Street', 'Bozeman', 'MT', 'US', '6175551252', '4', '2018','59715');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Tony', 'Roberson', '60724800', '3', '369 Edgewood Road', 'Palm Harbor', 'FL', 'US', '6175551253', '5', '2018','34683');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Jamie', 'Warner', '34528690', '4', '385 6th Avenue', 'Bellmore', 'NY', 'US', '6175551254', '1', '2019','11710');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Inez', 'Reeves', '84632404', '5', '867 Oxford Court', 'La Porte', 'IN', 'US', '6175551255', '2', '2019','46350');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Timothy', 'Hodges', '83608304', '6', '991 Laurel Drive', 'Glenview', 'IL', 'US', '6175551256', '3', '2019','60025');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Jan', 'Stevenson', '22399936', '1', '964 Devon Court', 'Goldsboro', 'NC', 'US', '6175551257', '4', '2019','27530');
-INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Forrest', 'Jenkins', '88192864', '2', '531 Cleveland Street', 'Littleton', 'CO', 'US', '6175551258', '5', '2019','80123');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Valerie', 'Wilkerson', '69190510', 'wilkerson.v', '1', '454 Spruce Avenue', 'Youngstown', 'OH', 'US', '6175551239', '1', '2016','44512');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Clyde', 'Hampton', '50174491', 'hampton.c', '2', '977 Eagle Road', 'Addison', 'IL', 'US', '6175551240', '2', '2016','60101');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Leo', 'Bennett', '40523365', 'bennett.l', '3', '98 Hawthorne Avenue', 'Merrick', 'NY', 'US', '6175551241', '3', '2016','11566');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Ralph', 'Holmes', '57863610', 'holmes.r', '4', '499 Central Avenue', 'Wayne', 'NJ', 'US', '6175551242', '4', '2016','07470');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Kay', 'Taylor', '94537002', 'taylor.k', '5', '200 Parker Street', 'Adrian', 'MI', 'US', '6175551243', '5', '2016','49221');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Hugh', 'Luna', '87983866', 'luna.h', '6', '85 Main Street East', 'Parlin', 'NJ', 'US', '6175551244', '1', '2017','08859');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Lynda', 'Mathis', '61064216', 'mathis.l', '1', '839 Creekside Drive', 'Downingtown', 'PA', 'US', '6175551245', '2', '2017','19335');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Shawna', 'Lucas', '30505475', 'lucas.s', '2', '203 Brandywine Drive', 'Lutherville Timonium', 'MD', 'US', '6175551246', '3', '2017','21093');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Jeffrey', 'Warren', '73554027', 'warren.j', '3', '326 Buckingham Drive', 'Metarie', 'LA', 'US', '6175551247', '4', '2017','70001');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Wallace', 'Silva', '83348935', 'silva.w', '4', '100 Colonial Drive', 'Hamden', 'CT', 'US', '6175551248', '5', '2017','06514');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Chester', 'Jennings', '58969182', 'jennings.c', '5', '856 Lexington Drive', 'Port Washington', 'NY', 'US', '6175551249', '1', '2018','11050');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Barbara', 'Tate', '46283953', 'tate.b', '6', '676 Cemetery Road', 'Camberidge', 'MA', 'US', '6175551250', '2', '2018','02138');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Caroline', 'Gutierrez', '90193483', 'gutierrez.c', '1', '263 Route 17 ', 'Warminster', 'PA', 'US', '6175551251', '3', '2018','18974');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Meredith', 'Garza', '53667109', 'garza.m', '2', '414 Monroe Street', 'Bozeman', 'MT', 'US', '6175551252', '4', '2018','59715');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Tony', 'Roberson', '60724800', 'roberson.t', '3', '369 Edgewood Road', 'Palm Harbor', 'FL', 'US', '6175551253', '5', '2018','34683');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Jamie', 'Warner', '34528690', 'warner.j', '4', '385 6th Avenue', 'Bellmore', 'NY', 'US', '6175551254', '1', '2019','11710');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Inez', 'Reeves', '84632404', 'reeves.i', '5', '867 Oxford Court', 'La Porte', 'IN', 'US', '6175551255', '2', '2019','46350');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Timothy', 'Hodges', '83608304', 'hodges.t', '6', '991 Laurel Drive', 'Glenview', 'IL', 'US', '6175551256', '3', '2019','60025');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Jan', 'Stevenson', '22399936', 'stevenson.j', '1', '964 Devon Court', 'Goldsboro', 'NC', 'US', '6175551257', '4', '2019','27530');
+INSERT INTO `srs`.`Student` (`fName`, `lName`, `schoolID`, `username`, `major`, `address1`, `city`, `state`, `country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Forrest', 'Jenkins', '88192864', 'jenkins.f', '2', '531 Cleveland Street', 'Littleton', 'CO', 'US', '6175551258', '5', '2019','80123');
 
 INSERT INTO `srs`.`course` (`id`, `courseNumber`, `title`, `courseLevel`, `description`, `department`) VALUES ('1', 'PHYS1000', 'Physics 1', 'undergraduate', 'Designed to enable students to appreciate the role of physics in today\'s society and technology. Emphasis on the fundamental laws of nature on which all science is based.', '1');
 INSERT INTO `srs`.`course` (`id`, `courseNumber`, `title`, `courseLevel`, `description`, `department`) VALUES ('2', 'CHEM5000', 'Chemistry 1', 'graduate', 'This course will explore the ways modern chemists determine the composition and structures of chemicals, with an emphasis on molecules that are found in nature.', '1');
@@ -370,23 +282,23 @@ INSERT INTO `srs`.`course` (`id`, `courseNumber`, `title`, `courseLevel`, `descr
 INSERT INTO `srs`.`course` (`id`, `courseNumber`, `title`, `courseLevel`, `description`, `department`) VALUES ('11', 'ENGL1000', 'Creative Writing', 'undergraduate', 'Creative writing courses expose students to a variety of types of writing and provide them with opportunities to create their own works.', '6');
 INSERT INTO `srs`.`course` (`id`, `courseNumber`, `title`, `courseLevel`, `description`, `department`) VALUES ('12', 'ENGL5000', 'American Literature', 'graduate', 'The ultimate goals for this class are to expose students to American culture, heritage, and history through study of our literature; and, to continue advancement towards more mature, refined writing skills. ', '6');
 
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('1', '21', 'Spring 2016', '1');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('1', '22', 'Spring 2016', '2');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('2', '23', 'Spring 2016', '1');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('2', '24', 'Spring 2016', '2');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('3', '25', 'Spring 2016', '11');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('3', '26', 'Spring 2016', '12');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('4', '27', 'Spring 2016', '11');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('4', '28', 'Spring 2016', '12');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('5', '16', 'Spring 2016', '6');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('6', '17', 'Spring 2016', '7');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('7', '29', 'Spring 2016', '4');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('8', '30', 'Spring 2016', '5');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('8', '31', 'Spring 2016', '4');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('9', '32', 'Spring 2016', '9');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('10', '33', 'Spring 2016', '10');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('11', '34', 'Spring 2016', '3');
-INSERT INTO `srs`.`Section` (`course`, `location`, `semester`, `instructor`) VALUES ('12', '35', 'Spring 2016', '8');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('1', 'Spring 2016', '1');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('1', 'Spring 2016', '2');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('2', 'Spring 2016', '1');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('2', 'Spring 2016', '2');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('3', 'Spring 2016', '11');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('3', 'Spring 2016', '12');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('4', 'Spring 2016', '11');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('4', 'Spring 2016', '12');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('5', 'Spring 2016', '6');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('6', 'Spring 2016', '7');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('7', 'Spring 2016', '4');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('8', 'Spring 2016', '5');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('8', 'Spring 2016', '4');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('9', 'Spring 2016', '9');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('10', 'Spring 2016', '10');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('11', 'Spring 2016', '3');
+INSERT INTO `srs`.`Section` (`course`, `semester`, `instructor`) VALUES ('12', 'Spring 2016', '8');
 
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('1', '1');
 INSERT INTO `SRS`.`Registration` (`student`, `section`) VALUES ('1', '2');
