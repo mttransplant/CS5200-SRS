@@ -81,6 +81,8 @@ create table Instructor
 	lName varchar(255) not null,
     email varchar(255) unique,
 	department integer,
+	foreign key (department) references Department(id)
+		on update cascade on delete set null,
 	username varchar(255) unique
 );
 
@@ -91,7 +93,9 @@ create table Section
 	foreign key (course) references Course(id) 
 		on update cascade on delete no action,
 	semester varchar(255),
-	instructor int
+	instructor int,
+    foreign key (instructor) references Instructor(id)
+		on update cascade on delete set null
 );
 
 create table Registration 
