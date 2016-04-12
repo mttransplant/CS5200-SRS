@@ -52,7 +52,7 @@ public class Admin extends HttpServlet {
 		if(result)
 		{
 			request.setAttribute("result",result);
-			request.setAttribute("Successful", "Successfull login");
+			request.setAttribute("Successful", "Successful login");
 		}
 		else
 		{
