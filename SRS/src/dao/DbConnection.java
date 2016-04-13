@@ -10,6 +10,7 @@ import com.mysql.jdbc.ResultSet;
 
 import bean.AdminBean;
 import bean.StudentBean;
+import bean.InstructorBean;
 
 public class DbConnection {
 
@@ -333,5 +334,51 @@ public class DbConnection {
 //			return false;
 		return sbean;
 	}  
+/*
+	public ResultSet viewRoster(String username, String password) {
+		// TODO create roster object
+		Connection con = null;
+		String url="jdbc:mysql://localhost:3306/";
+		String dbName ="SRS";
+		
+		
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			con = DriverManager.getConnection(url+dbName,username,password);
+			//System.out.println("Connected to the databse");
+			PreparedStatement ps=con.prepareStatement( "select * from InstructorRoster");  
+			
+			ResultSet rs = (ResultSet) ps.executeQuery();
+			
+			rs.close();
+		    ps.close();
+			
+		    // TODO build return statement
 
+		}
+		catch (SQLException e2) {
+			e2.printStackTrace();
+		} 
+		catch (InstantiationException e) {
+			e.printStackTrace();
+		} 
+		catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} 
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}   
+		
+		finally	{
+			try {
+				con.close();
+			} 
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+*/
 }
