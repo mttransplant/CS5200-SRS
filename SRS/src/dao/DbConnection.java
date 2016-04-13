@@ -337,7 +337,7 @@ public class DbConnection {
 	}  
 
 	public ArrayList<RosterBean> viewRoster(InstructorBean instructor) {
-		// TODO create roster object
+		
 		Connection con = null;
 		String url="jdbc:mysql://localhost:3306/";
 		String dbName ="SRS";
@@ -349,7 +349,7 @@ public class DbConnection {
 		{
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			con = DriverManager.getConnection(url+dbName,username,password);
-			//System.out.println("Connected to the databse");
+			
 			PreparedStatement ps=con.prepareStatement( "select * from InstructorRoster");  
 			
 			ResultSet rs = (ResultSet) ps.executeQuery();
@@ -376,7 +376,7 @@ public class DbConnection {
 			rs.close();
 		    ps.close();
 			
-		    // TODO build return statement
+		   
 		    
 		}
 		catch (SQLException e2) {
