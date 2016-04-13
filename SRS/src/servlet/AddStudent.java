@@ -8,8 +8,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import bean.StudentBean;
 import dao.DbConnection;
 
 /**
@@ -39,8 +37,7 @@ public class AddStudent extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//doGet(request, response);
+		
 		response.setContentType("text/html");  
 		DbConnection connection = new DbConnection();
 		ArrayList<Integer> advisors = connection.getAdvisor();

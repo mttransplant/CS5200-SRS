@@ -7,19 +7,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import bean.InstructorBean;
+import bean.CourseBean;
+import dao.DbConnection;
 
 /**
- * Servlet implementation class Instructor
+ * Servlet implementation class NewCourse
  */
-@WebServlet("/Instructor")
-public class Instructor extends HttpServlet {
+@WebServlet("/NewCourse")
+public class NewCourse extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+       
     /**
-     * Default constructor. 
+     * @see HttpServlet#HttpServlet()
      */
-    public Instructor() {
+    public NewCourse() {
+        super();
         // TODO Auto-generated constructor stub
     }
 
@@ -35,33 +37,26 @@ public class Instructor extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		response.setContentType("text/html");  
-		InstructorBean instructorBean = new InstructorBean();
-		instructorBean.setUserName(request.getParameter("username"));
-		instructorBean.setPassword(request.getParameter("password"));
-		Boolean result;
-		if(instructorBean.getUserName().equals("m.jones")&&instructorBean.getPassword().equals("jones"))
-		{
-			result = true;
-		}
-		else
-		{
-			result = false;
-		}
+		DbConnection connection = new DbConnection();
+		CourseBean courseBean = new CourseBean();
+		
+		Boolean result = false;
+		courseBean.setCourseNo(request.getParameter("courseNo"));
+		courseBean.setCourseLevel(request.getParameter("courseLevel"));
+		courseBean.setDescription(request.getParameter("description"));
+		courseBean.setTitle(request.getParameter("courseTitle"));
+		courseBean.setDepartment(Integer.parseInt(request.getParameter("department")));
+		result = connection.insertCourse(courseBean);
 		if(result)
 		{
-			request.setAttribute("result",result);
-			request.setAttribute("Successful", "Successful login");
+			request.setAttribute("SuccessfulCourse", "Course successfully inserted.");
 		}
 		else
 		{
-			request.setAttribute("result", result);
-			request.setAttribute("Failure", "Retry");
+			request.setAttribute("FailureCourse", "Course not inserted successfully.");
 		}
 		request.getRequestDispatcher("/Success.jsp").forward(request, response);
 	}
-
-	
 
 }

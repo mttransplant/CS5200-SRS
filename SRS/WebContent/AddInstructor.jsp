@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+     <%@page import="java.util.ArrayList"%>
+    <%@page import="java.util.Iterator"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Add Advisor</title>
+<title>Insert title here</title>
 <style>
 #header {
     background-color:black;
@@ -57,7 +59,7 @@
 
 <div id="section">
 <br>
-<form name="AddAdvisor" action="addAdvisor" method="post">
+<form name="AddInstructor" action="addInstructor" method="post">
 <table>
 <tr>
 <td>First Name</td> 
@@ -72,9 +74,25 @@
 <td> <input type="text" name="email"></td>
 </tr>
 <tr>
-<td> Phone </td>
-<td> <input type="text" name="phone"> </td>
-</tr>
+<td> Department </td>
+<td>
+<select name="department">
+<% 
+if(request.getAttribute("departments")!=null)
+{
+	ArrayList<Integer> departments = (ArrayList<Integer>)request.getAttribute("departments");
+	Iterator<Integer> iterator = departments.iterator();
+	while(iterator.hasNext())
+	{
+		Integer department = iterator.next();
+		%>
+		<option value = "<%=department%>"><%=department%></option>
+		<% } %>
+</select>
+	<%
+}
+%>
+</td></tr>
 <tr>
 <td> UserName </td>
 <td> <input type="text" name="username"> </td>
@@ -90,13 +108,13 @@ Copyright © neu.edu
 </div>
 </body>
 </html>
-
-<!-- Create table Advisor
+<!--  
+create table Instructor
 (
 	id int primary key auto_increment,
- 	fName varchar(255) not null,
+	fName varchar(255) not null,
 	lName varchar(255) not null,
-	email varchar(255) unique,
-	phone varchar(10),
-	username varchar(255)
-); -->
+    email varchar(255) unique,
+	department integer,
+	username varchar(255) unique
+);-->

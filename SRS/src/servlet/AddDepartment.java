@@ -7,19 +7,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import bean.InstructorBean;
+import bean.DepartmentBean;
+import dao.DbConnection;
 
 /**
- * Servlet implementation class Instructor
+ * Servlet implementation class AddDepartment
  */
-@WebServlet("/Instructor")
-public class Instructor extends HttpServlet {
+@WebServlet("/AddDepartment")
+public class AddDepartment extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+       
     /**
-     * Default constructor. 
+     * @see HttpServlet#HttpServlet()
      */
-    public Instructor() {
+    public AddDepartment() {
+        super();
         // TODO Auto-generated constructor stub
     }
 
@@ -35,33 +37,21 @@ public class Instructor extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		response.setContentType("text/html");  
-		InstructorBean instructorBean = new InstructorBean();
-		instructorBean.setUserName(request.getParameter("username"));
-		instructorBean.setPassword(request.getParameter("password"));
-		Boolean result;
-		if(instructorBean.getUserName().equals("m.jones")&&instructorBean.getPassword().equals("jones"))
-		{
-			result = true;
-		}
-		else
-		{
-			result = false;
-		}
+		DbConnection connection = new DbConnection();
+		DepartmentBean departmentBean = new DepartmentBean();
+		Boolean result = false;
+		departmentBean.setName(request.getParameter("name"));
+		departmentBean.setPhone(request.getParameter("phone"));
+		result = connection.insertDepartment(departmentBean);
 		if(result)
 		{
-			request.setAttribute("result",result);
-			request.setAttribute("Successful", "Successful login");
-		}
+			request.setAttribute("SuccessfulDepartment", "Department successfully inserted.");
+		}   
 		else
 		{
-			request.setAttribute("result", result);
-			request.setAttribute("Failure", "Retry");
+			request.setAttribute("FailureDepartment", "Department not inserted successfully.");
 		}
 		request.getRequestDispatcher("/Success.jsp").forward(request, response);
 	}
-
-	
-
 }

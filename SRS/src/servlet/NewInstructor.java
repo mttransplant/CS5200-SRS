@@ -8,18 +8,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import bean.InstructorBean;
+import dao.DbConnection;
 
 /**
- * Servlet implementation class Instructor
+ * Servlet implementation class NewInstructor
  */
-@WebServlet("/Instructor")
-public class Instructor extends HttpServlet {
+@WebServlet("/NewInstructor")
+public class NewInstructor extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+       
     /**
-     * Default constructor. 
+     * @see HttpServlet#HttpServlet()
      */
-    public Instructor() {
+    public NewInstructor() {
+        super();
         // TODO Auto-generated constructor stub
     }
 
@@ -35,33 +37,27 @@ public class Instructor extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		response.setContentType("text/html");  
+		DbConnection connection = new DbConnection();
 		InstructorBean instructorBean = new InstructorBean();
+		
+		Boolean result = false;
+		instructorBean.setfName(request.getParameter("fName"));
+		instructorBean.setlName(request.getParameter("lName"));
+		instructorBean.setEmail(request.getParameter("email"));
+		instructorBean.setDepartment(Integer.parseInt(request.getParameter("department")));
 		instructorBean.setUserName(request.getParameter("username"));
-		instructorBean.setPassword(request.getParameter("password"));
-		Boolean result;
-		if(instructorBean.getUserName().equals("m.jones")&&instructorBean.getPassword().equals("jones"))
-		{
-			result = true;
-		}
-		else
-		{
-			result = false;
-		}
+		
+		result = connection.insertInstructor(instructorBean);
 		if(result)
 		{
-			request.setAttribute("result",result);
-			request.setAttribute("Successful", "Successful login");
+			request.setAttribute("SuccessfulInstructor", "Instructor successfully inserted.");
 		}
 		else
 		{
-			request.setAttribute("result", result);
-			request.setAttribute("Failure", "Retry");
+			request.setAttribute("FailureInstructor", "Instructor not inserted successfully.");
 		}
 		request.getRequestDispatcher("/Success.jsp").forward(request, response);
 	}
-
-	
 
 }

@@ -1,25 +1,28 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import bean.InstructorBean;
+import dao.DbConnection;
 
 /**
- * Servlet implementation class Instructor
+ * Servlet implementation class AdvisorRegistration
  */
-@WebServlet("/Instructor")
-public class Instructor extends HttpServlet {
+@WebServlet("/AdvisorRegistration")
+public class AdvisorRegistration extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+       
     /**
-     * Default constructor. 
+     * @see HttpServlet#HttpServlet()
      */
-    public Instructor() {
+    public AdvisorRegistration() {
+        super();
         // TODO Auto-generated constructor stub
     }
 
@@ -35,33 +38,13 @@ public class Instructor extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		response.setContentType("text/html");  
-		InstructorBean instructorBean = new InstructorBean();
-		instructorBean.setUserName(request.getParameter("username"));
-		instructorBean.setPassword(request.getParameter("password"));
-		Boolean result;
-		if(instructorBean.getUserName().equals("m.jones")&&instructorBean.getPassword().equals("jones"))
-		{
-			result = true;
-		}
-		else
-		{
-			result = false;
-		}
-		if(result)
-		{
-			request.setAttribute("result",result);
-			request.setAttribute("Successful", "Successful login");
-		}
-		else
-		{
-			request.setAttribute("result", result);
-			request.setAttribute("Failure", "Retry");
-		}
-		request.getRequestDispatcher("/Success.jsp").forward(request, response);
+		DbConnection connection = new DbConnection();
+		ArrayList<Integer> students = connection.getStudent();
+		ArrayList<Integer> sections = connection.getSection();
+		request.setAttribute("students", students);
+		request.setAttribute("sections", sections);
+		request.getRequestDispatcher("/AdvisorRegistration.jsp").forward(request, response);
 	}
-
-	
 
 }

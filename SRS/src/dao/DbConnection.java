@@ -5,72 +5,43 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import com.mysql.jdbc.ResultSet;
-
-import bean.AdminBean;
-import bean.StudentBean;
+import bean.AdvisorBean;
+import bean.CourseBean;
+import bean.DepartmentBean;
 import bean.InstructorBean;
+import bean.RegistrationBean;
 import bean.RosterBean;
+import bean.SectionBean;
+import bean.StudentBean;
 
 public class DbConnection {
 
 	ArrayList<Integer> advisors = new ArrayList<Integer>();
 	ArrayList<Integer> majors = new ArrayList<Integer>();
-	AdminBean adminBean = new AdminBean();
+	ArrayList<Integer> students = new ArrayList<Integer>();
+	ArrayList<Integer> sections = new ArrayList<Integer>();
+	ArrayList<Integer> courses = new ArrayList<Integer>();
+	ArrayList<Integer> instructors = new ArrayList<Integer>();
 	public boolean insertStudent(StudentBean studentBean)
 	{
 		int i=0;
-		long UUId;
-		int auto = 0;
 		Connection con = null;
 		String url="jdbc:mysql://localhost:3306/";
 		String dbName ="SRS";
-		String userName= adminBean.getUserName();
-		String password= adminBean.getPassword();
+		String userName= "admin";
+		String password= "admin";
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			con = DriverManager.getConnection(url+dbName,userName,password);
 			System.out.println("Connected to the database");
-
-			/*	INSERT INTO `srs`.`Student` (`fName`, `lName`, `sID`, `major`, `address1`, `city`, `state`, 
-					`country`, `phoneNumber`, `advisor`, `yearOfGraduation`,`postalCode`) VALUES ('Ralph', 
-							'Holmes', '57863610', '4', '499 Central Avenue', 'Wayne', 'NJ', 'US', 
-							'6175551242', '4', '2016','07470');
-			 */
-			
-			/*create table Student 
-	(
-	id int primary key auto_increment,
-	fName varchar(255) not null,
-	lName varchar(255) not null,
-	schoolID char(8) not null,
-    email varchar(255) unique,
-	major integer,
-	foreign key (major) references Department(id)
-		on update cascade on delete set null,
-	address1 varchar(255) not null,
-	address2 varchar(255),
-	address3 varchar(255),
-	city varchar(255) not null,
-	state varchar(255) not null,
-    postalCode varchar(10) not null,
-	country varchar(255) not null,
-	phoneNumber varchar(15),
-	advisor int,
-	foreign key (advisor) references Advisor(id)
-		on update cascade on delete set null,
-	yearOfGraduation integer,
-	livesOncampus enum('No','Yes') not null,
-    username varchar(255) unique
-	);*/
 			PreparedStatement ps=con.prepareStatement(  
 					"insert into Student (fName,lName,email,major,address1, "+
-											"address2, address3, city, state,"+ 
-					"postalCode,country, phoneNumber, advisor, yearOfGraduation,livesOncampus)"+
-							"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");  
-			
+							"address2, address3, city, state,"+ 
+							"postalCode,country, phoneNumber, advisor, yearOfGraduation,livesOncampus)"+
+					"values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");  
+
 			ps.setString(1, studentBean.getFirstName());
 			ps.setString(2, studentBean.getLastName());
 			ps.setString(3, studentBean.getEmail());
@@ -121,13 +92,13 @@ public class DbConnection {
 
 	public ArrayList<Integer> getAdvisor()
 	{
-		
+
 		Connection con = null;
 		String url="jdbc:mysql://localhost:3306/";
 		String dbName ="SRS";
-		String userName= adminBean.getUserName();
-		String password= adminBean.getPassword();
-		
+		String userName= "admin";
+		String password= "admin";
+
 		try
 		{
 
@@ -137,13 +108,13 @@ public class DbConnection {
 
 			PreparedStatement statement = con.prepareStatement("select id from Advisor");
 			ResultSet rs = (ResultSet) statement.executeQuery();
-			
+
 			while(rs.next())
 			{
 				advisors.add(rs.getInt(1));
 				System.out.println("Advisor: " + rs.getInt(1));
 			}
-			
+
 			statement.close();
 		}
 		catch (SQLException e2) {
@@ -174,13 +145,13 @@ public class DbConnection {
 	}
 	public ArrayList<Integer> getDepartment()
 	{
-		
+
 		Connection con = null;
 		String url="jdbc:mysql://localhost:3306/";
 		String dbName ="SRS";
-		String userName= adminBean.getUserName();
-		String password= adminBean.getPassword();
-		
+		String userName= "admin";
+		String password= "admin";
+
 		try
 		{
 
@@ -190,13 +161,13 @@ public class DbConnection {
 
 			PreparedStatement statement = con.prepareStatement("select id from Department");
 			ResultSet rs = (ResultSet) statement.executeQuery();
-			
+
 			while(rs.next())
 			{
 				majors.add(rs.getInt(1));
 				System.out.println("Department: " + rs.getInt(1));
 			}
-			
+
 			statement.close();
 		}
 		catch (SQLException e2) {
@@ -225,86 +196,261 @@ public class DbConnection {
 		}
 		return majors;
 	}
-	
-	public StudentBean viewStudentInfo(String id)
+
+	public ArrayList<Integer> getStudent()
 	{
-		//int i=0;
+
 		Connection con = null;
 		String url="jdbc:mysql://localhost:3306/";
 		String dbName ="SRS";
-		String userName= "root";
-		String password= "Mishu123!";
-		StudentBean sbean = new StudentBean();
-		String fName="";
-		String lName = "";
-		String address1="";
-		String address2="";
-		String address3="";
-		String city="";
-		String state="";
-		String country="";
-		String phoneNo = "";
-		int yearOfGraduation = 0;
-		int advisor= 0;
-		String major="";	
-		
-		
-		//String sID = "";
-		
+		String userName= "admin";
+		String password= "admin";
+
+		try
+		{
+
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			con = DriverManager.getConnection(url+dbName,userName,password);
+			System.out.println("Connected to the database");
+
+			PreparedStatement statement = con.prepareStatement("select id from Student");
+			ResultSet rs = (ResultSet) statement.executeQuery();
+
+			while(rs.next())
+			{
+				students.add(rs.getInt(1));
+				System.out.println("Student: " + rs.getInt(1));
+			}
+
+			statement.close();
+		}
+		catch (SQLException e2) {
+			e2.printStackTrace();
+		} catch (InstantiationException e) {
+
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+
+			e.printStackTrace();
+		} 
+		catch (ClassNotFoundException e) {
+
+			e.printStackTrace();
+		}   
+		finally
+		{
+			try {
+
+				con.close();
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+		}
+		return students;
+	}
+
+	public ArrayList<Integer> getSection()
+	{
+
+		Connection con = null;
+		String url="jdbc:mysql://localhost:3306/";
+		String dbName ="SRS";
+		String userName= "admin";
+		String password= "admin";
+
+		try
+		{
+
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			con = DriverManager.getConnection(url+dbName,userName,password);
+			System.out.println("Connected to the database");
+
+			PreparedStatement statement = con.prepareStatement("select id from Section");
+			ResultSet rs = (ResultSet) statement.executeQuery();
+
+			while(rs.next())
+			{
+				sections.add(rs.getInt(1));
+				System.out.println("Section: " + rs.getInt(1));
+			}
+
+			statement.close();
+		}
+		catch (SQLException e2) {
+			e2.printStackTrace();
+		} catch (InstantiationException e) {
+
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+
+			e.printStackTrace();
+		} 
+		catch (ClassNotFoundException e) {
+
+			e.printStackTrace();
+		}   
+		finally
+		{
+			try {
+
+				con.close();
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+		}
+		return sections;
+	}
+
+	public ArrayList<Integer> getCourse()
+	{
+
+		Connection con = null;
+		String url="jdbc:mysql://localhost:3306/";
+		String dbName ="SRS";
+		String userName= "admin";
+		String password= "admin";
+
+		try
+		{
+
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			con = DriverManager.getConnection(url+dbName,userName,password);
+			System.out.println("Connected to the database");
+
+			PreparedStatement statement = con.prepareStatement("select id from Course");
+			ResultSet rs = (ResultSet) statement.executeQuery();
+
+			while(rs.next())
+			{
+				courses.add(rs.getInt(1));
+				System.out.println("Course: " + rs.getInt(1));
+			}
+
+			statement.close();
+		}
+		catch (SQLException e2) {
+			e2.printStackTrace();
+		} catch (InstantiationException e) {
+
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+
+			e.printStackTrace();
+		} 
+		catch (ClassNotFoundException e) {
+
+			e.printStackTrace();
+		}   
+		finally
+		{
+			try {
+
+				con.close();
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+		}
+		return courses;
+	}
+
+	public ArrayList<Integer> getInstructor()
+	{
+
+		Connection con = null;
+		String url="jdbc:mysql://localhost:3306/";
+		String dbName ="SRS";
+		String userName= "admin";
+		String password= "admin";
+
+		try
+		{
+
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			con = DriverManager.getConnection(url+dbName,userName,password);
+			System.out.println("Connected to the database");
+
+			PreparedStatement statement = con.prepareStatement("select id from Instructor");
+			ResultSet rs = (ResultSet) statement.executeQuery();
+
+			while(rs.next())
+			{
+				instructors.add(rs.getInt(1));
+				System.out.println("Instructor: " + rs.getInt(1));
+			}
+
+			statement.close();
+		}
+		catch (SQLException e2) {
+			e2.printStackTrace();
+		} catch (InstantiationException e) {
+
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+
+			e.printStackTrace();
+		} 
+		catch (ClassNotFoundException e) {
+
+			e.printStackTrace();
+		}   
+		finally
+		{
+			try {
+
+				con.close();
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+		}
+		return instructors;
+	}
+
+
+
+
+	public boolean insertAdvisor(AdvisorBean advisorBean)
+	{
+		int i=0;
+
+		Connection con = null;
+		String url="jdbc:mysql://localhost:3306/";
+		String dbName ="SRS";
+		String userName= "admin";
+		String password= "admin";
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			con = DriverManager.getConnection(url+dbName,userName,password);
-			//System.out.println("Connected to the databse");
-			PreparedStatement ps=con.prepareStatement( "select * from Student where sID=?");  
-			
-			ps.setString(1, id);
-			
-			ResultSet rs = (ResultSet) ps.executeQuery();
-			
-			//while (rs.next()) {
-			if(rs.next()){	
-				fName = rs.getString("fName");
-				 lName = rs.getString("lName");
-				 address1=rs.getString("address1");
-				 address2=rs.getString("address2");
-				 address3=rs.getString("address3");
-				 city=rs.getString("city");
-				 state=rs.getString("state");
-				 country=rs.getString("country");
-				 major=rs.getString("major");
-				 phoneNo=rs.getString("phoneNumber");
-				 advisor=rs.getInt("advisor");
-				 yearOfGraduation=rs.getInt("yearOfGraduation");
-				 major=rs.getString("major");
-				 
-		     //sID = rs.getString("sID");			}
-			//int b = rs.getInt("age");
-			
-			//request.setAttribute("first",fName);
-		     
-			}
-			
-			sbean.setFirstName(fName);
-			sbean.setLastName(lName);
-			sbean.setAddress1(address1);
-			sbean.setAddress2(address2);
-			sbean.setAddress3(address3);
-			sbean.setCity(city);
-			sbean.setState(state);
-			sbean.setAdvisor(String.valueOf(advisor));
-			sbean.setMajor(major);
-			sbean.setCountry(country);
-			sbean.setPhoneNo(phoneNo);
-			sbean.setYearOfGraduation(yearOfGraduation);
-			
-			//i=ps.executeUpdate();  
-			rs.close();
-		      ps.close();
-		      con.close();
-		      
-		      
-			
+			System.out.println("Connected to the database");
+			/*Create table Advisor
+(
+	id int primary key auto_increment,
+ 	fName varchar(255) not null,
+	lName varchar(255) not null,
+	email varchar(255) unique,
+	phone varchar(10),
+	username varchar(255)
+);
+			 */
+			PreparedStatement ps=con.prepareStatement(  
+					"insert into Advisor (fName,lName,email,phone,username)"+
+					"values(?,?,?,?,?)");  
+
+			ps.setString(1, advisorBean.getfName());
+			ps.setString(2, advisorBean.getlName());
+			ps.setString(3, advisorBean.getEmail());
+			ps.setString(4, advisorBean.getPhoneNo());
+			ps.setString(5, advisorBean.getUserName());
+			i=ps.executeUpdate();  
+
 		}
 		catch (SQLException e2) {
 			e2.printStackTrace();
@@ -329,19 +475,450 @@ public class DbConnection {
 				e.printStackTrace();
 			}
 		}
-//		if(i>0)  
-//			return true;
-//		else
-//			return false;
-		return sbean;
+		if(i>0)  
+			return true;
+		else
+			return false;
 	}  
 
-	public ArrayList<RosterBean> viewRoster(InstructorBean instructor) {
+	public boolean insertDepartment(DepartmentBean departmentBean)
+	{
+		int i=0;
+		Connection con = null;
+		String url="jdbc:mysql://localhost:3306/";
+		String dbName ="SRS";
+		String userName= "admin";
+		String password= "admin";
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			con = DriverManager.getConnection(url+dbName,userName,password);
+			System.out.println("Connected to the database");
+			/*create table Department
+(
+	id int primary key auto_increment,
+	name varchar(255) not null,
+	phoneNumber varchar(10)
+);
+			 */
+			PreparedStatement ps=con.prepareStatement(  
+					"insert into Department (name,phoneNumber)"+
+					"values(?,?)");  
+
+			ps.setString(1, departmentBean.getName());
+			ps.setString(2, departmentBean.getPhone());
+			i=ps.executeUpdate();  
+
+		}
+		catch (SQLException e2) {
+			e2.printStackTrace();
+		} catch (InstantiationException e) {
+
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+
+			e.printStackTrace();
+		}   
+		finally
+		{
+			try {
+
+				con.close();
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+		}
+		if(i>0)  
+			return true;
+		else
+			return false;
+	}  
+
+	public boolean insertInstructor(InstructorBean instructorBean)
+	{
+		int i=0;
+		Connection con = null;
+		String url="jdbc:mysql://localhost:3306/";
+		String dbName ="SRS";
+		String userName= "admin";
+		String password= "admin";
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			con = DriverManager.getConnection(url+dbName,userName,password);
+			System.out.println("Connected to the database");
+			/*create table Instructor
+(
+	id int primary key auto_increment,
+	fName varchar(255) not null,
+	lName varchar(255) not null,
+    email varchar(255) unique,
+	department integer,
+	foreign key (department) references Department(id)
+		on update cascade on delete set null,
+	username varchar(255) unique
+);
+			 */
+
+			PreparedStatement ps=con.prepareStatement(  
+					"insert into instructor (fName,lName,email,department,username)"+
+					"values(?,?,?,?,?)");  
+
+			ps.setString(1, instructorBean.getfName());
+			ps.setString(2, instructorBean.getlName());
+			ps.setString(3, instructorBean.getEmail());
+			ps.setInt(4, instructorBean.getDepartment());
+			ps.setString(5, instructorBean.getUserName());
+			i=ps.executeUpdate();  
+
+		}
+		catch (SQLException e2) {
+			e2.printStackTrace();
+		} catch (InstantiationException e) {
+
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+
+			e.printStackTrace();
+		}   
+		finally
+		{
+			try {
+
+				con.close();
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+		}
+		if(i>0)  
+			return true;
+		else
+			return false;
+	}  
+
+	public boolean insertCourse(CourseBean courseBean)
+	{
+		int i=0;
+		Connection con = null;
+		String url="jdbc:mysql://localhost:3306/";
+		String dbName ="SRS";
+		String userName= "admin";
+		String password= "admin";
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			con = DriverManager.getConnection(url+dbName,userName,password);
+			System.out.println("Connected to the database");
+			/*create table Course
+	(
+	id int primary key auto_increment,
+	courseNumber varchar(8) unique,
+	title varchar(255),
+	courseLevel varchar(255),
+    description longtext,
+	department int,
+	foreign key (department) references Department(id) 
+		on update cascade on delete no action
+);
+			 */
+
+			PreparedStatement ps=con.prepareStatement(  
+					"insert into course (courseNumber,title,courseLevel,description,department)"+
+					"values(?,?,?,?,?)");  
+
+			ps.setString(1, courseBean.getCourseNo());
+			ps.setString(2, courseBean.getTitle());
+			ps.setString(3, courseBean.getCourseLevel());
+			ps.setString(4, courseBean.getDescription());
+			ps.setInt(5, courseBean.getDepartment());
+			i=ps.executeUpdate();  
+
+		}
+		catch (SQLException e2) {
+			e2.printStackTrace();
+		} catch (InstantiationException e) {
+
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+
+			e.printStackTrace();
+		}   
+		finally
+		{
+			try {
+
+				con.close();
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+		}
+		if(i>0)  
+			return true;
+		else
+			return false;
+	}  
+
+	public boolean insertRegistration(RegistrationBean registrationBean)
+	{
+		int i=0;
+
+		Connection con = null;
+		String url="jdbc:mysql://localhost:3306/";
+		String dbName ="SRS";
+		String userName= "admin";
+		String password= "admin";
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			con = DriverManager.getConnection(url+dbName,userName,password);
+			System.out.println("Connected to the database");
+			/*create table Registration 
+	(
+	student int,
+	foreign key (student) references Student(id) 
+		on update cascade on delete cascade,
+	section int,
+    foreign key (section) references Section(id)
+		on update cascade on delete cascade,
+	grade varchar(2),
+ 	time_stamp timestamp,
+	primary key (student, section)
+);
+			 */
+			PreparedStatement ps=con.prepareStatement(  
+					"insert into Registration (student,section)"+
+					"values(?,?)");  
+
+			ps.setInt(1, registrationBean.getStudent());
+			ps.setInt(2, registrationBean.getSection());
+			i=ps.executeUpdate();  
+
+		}
+		catch (SQLException e2) {
+			e2.printStackTrace();
+		} catch (InstantiationException e) {
+
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+
+			e.printStackTrace();
+		}   
+		finally
+		{
+			try {
+
+				con.close();
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+		}
+		if(i>0)  
+			return true;
+		else
+			return false;
+	}  public boolean insertSection(SectionBean sectionBean)
+	{
+		int i=0;
+		Connection con = null;
+		String url="jdbc:mysql://localhost:3306/";
+		String dbName ="SRS";
+		String userName= "admin";
+		String password= "admin";
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			con = DriverManager.getConnection(url+dbName,userName,password);
+			System.out.println("Connected to the database");
+			/*create table Section
+	(
+	id int primary key auto_increment,
+	course int,
+	foreign key (course) references Course(id) 
+		on update cascade on delete no action,
+	semester varchar(255),
+	instructor int,
+    foreign key (instructor) references Instructor(id)
+		on update cascade on delete set null
+);
+			 */
+
+			PreparedStatement ps=con.prepareStatement(  
+					"insert into section (course,semester,instructor)"+
+					"values(?,?,?)");  
+
+			ps.setInt(1, sectionBean.getCourse());
+			ps.setString(2, sectionBean.getSemester());
+			ps.setInt(3, sectionBean.getInstructor());
+			i=ps.executeUpdate();  
+
+		}
+		catch (SQLException e2) {
+			e2.printStackTrace();
+		} catch (InstantiationException e) {
+
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+
+			e.printStackTrace();
+		}   
+		finally
+		{
+			try {
+
+				con.close();
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+		}
+		if(i>0)  
+			return true;
+		else
+			return false;
+	}  
+	
+	
+
+	public StudentBean viewStudentInfo(String id)
+	{
+		//int i=0;
+		Connection con = null;
+		String url="jdbc:mysql://localhost:3306/";
+		String dbName ="SRS";
+		String userName= "root";
+		String password= "Mishu123!";
+		StudentBean sbean = new StudentBean();
+		String fName="";
+		String lName = "";
+		String address1="";
+		String address2="";
+		String address3="";
+		String city="";
+		String state="";
+		String country="";
+		String phoneNo = "";
+		int yearOfGraduation = 0;
+		int advisor= 0;
+		String major="";	
+
+
+		//String sID = "";
+
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			con = DriverManager.getConnection(url+dbName,userName,password);
+			//System.out.println("Connected to the database");
+			PreparedStatement ps=con.prepareStatement( "select * from Student where id=?");  
+
+			ps.setString(1, id);
+
+			ResultSet rs = (ResultSet) ps.executeQuery();
+
+			//while (rs.next()) {
+			if(rs.next()){	
+				fName = rs.getString("fName");
+				lName = rs.getString("lName");
+				address1=rs.getString("address1");
+				address2=rs.getString("address2");
+				address3=rs.getString("address3");
+				city=rs.getString("city");
+				state=rs.getString("state");
+				country=rs.getString("country");
+				major=rs.getString("major");
+				phoneNo=rs.getString("phoneNumber");
+				advisor=rs.getInt("advisor");
+				yearOfGraduation=rs.getInt("yearOfGraduation");
+				major=rs.getString("major");
+
+				//sID = rs.getString("sID");			}
+				//int b = rs.getInt("age");
+
+				//request.setAttribute("first",fName);
+
+			}
+
+			sbean.setFirstName(fName);
+			sbean.setLastName(lName);
+			sbean.setAddress1(address1);
+			sbean.setAddress2(address2);
+			sbean.setAddress3(address3);
+			sbean.setCity(city);
+			sbean.setState(state);
+			sbean.setAdvisor(String.valueOf(advisor));
+			sbean.setMajor(major);
+			sbean.setCountry(country);
+			sbean.setPhoneNo(phoneNo);
+			sbean.setYearOfGraduation(yearOfGraduation);
+
+			//i=ps.executeUpdate();  
+			rs.close();
+			ps.close();
+			con.close();
+
+
+
+		}
+		catch (SQLException e2) {
+			e2.printStackTrace();
+		} catch (InstantiationException e) {
+
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+
+			e.printStackTrace();
+		}   
+		finally
+		{
+			try {
+
+				con.close();
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+		}
+		//		if(i>0)  
+		//			return true;
+		//		else
+		//			return false;
+		return sbean;
+	}  
+	
+public ArrayList<RosterBean> viewRoster(InstructorBean instructor) {
 		
 		Connection con = null;
 		String url="jdbc:mysql://localhost:3306/";
 		String dbName ="SRS";
-		String username = instructor.getUsername();
+		String username = instructor.getUserName();
 		String password = instructor.getPassword();
 		ArrayList<RosterBean> roster = new ArrayList<RosterBean>();
 		
@@ -401,4 +978,109 @@ public class DbConnection {
 		}
 		return roster;
 	}
+
+	public ArrayList<CourseBean> viewCourseOffer()
+	{
+		
+	
+
+		Connection con = null;
+		String url="jdbc:mysql://localhost:3306/";
+		String dbName ="SRS";
+		String userName= "wilkerson.v";
+		String password= "wilkerson";
+		CourseBean cbean ;
+		String courseNumber="";
+		String title = "";
+		String courseLevel="";
+		String description="";
+		int department= 0;
+		
+		
+		ArrayList<CourseBean> courseList = new ArrayList<CourseBean>();
+	//	CourseOfferBean cobean = new CourseOfferBean();
+		//String sID = "";
+		
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			con = DriverManager.getConnection(url+dbName,userName,password);
+			//System.out.println("Connected to the databse");
+			PreparedStatement ps=con.prepareStatement( "select courseNumber, title, courseLevel, description, department from course");  
+			
+			//ps.setString(1, id);
+			
+			ResultSet rs = (ResultSet) ps.executeQuery();
+			
+			while (rs.next()) {
+		//	if(rs.next()){	
+				
+				courseNumber = rs.getString("courseNumber");
+				System.out.println(rs.getString("courseNumber"));
+				title = rs.getString("title");
+				courseLevel=rs.getString("courseLevel");
+				description=rs.getString("description");
+				department=rs.getInt("department");
+	//			 DataFields d=new DataFields(r.getString(1), r.getString(2), r.getString(3),r.getString(4), r.getString(5));                    
+      //           allData.add(i,d);
+        //         i++;
+		//		courseList.add(new CourseOfferBean(courseNumber, title, courseLevel, description,department));		 
+		     //sID = rs.getString("sID");			}
+			//int b = rs.getInt("age");
+			
+			//request.setAttribute("first",fName);
+				cbean = new CourseBean();
+				
+				cbean.setCourseNo(courseNumber);
+				cbean.setTitle(title);
+				cbean.setCourseLevel(courseLevel);
+				cbean.setDepartment(department);
+				cbean.setDescription(description);
+				
+				courseList.add(cbean);
+		     
+			}
+			
+			
+						
+			//i=ps.executeUpdate();  
+			rs.close();
+		      ps.close();
+		      con.close();
+		      
+		      
+			
+		}
+		catch (SQLException e2) {
+			e2.printStackTrace();
+		} catch (InstantiationException e) {
+
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+
+			e.printStackTrace();
+		}   
+		finally
+		{
+			try {
+
+				con.close();
+
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+		}
+//		if(i>0)  
+//			return true;
+//		else
+//			return false;
+		return courseList;
+	}  
+
+
+
 }

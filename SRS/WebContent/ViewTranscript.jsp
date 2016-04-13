@@ -40,19 +40,6 @@
 </style>
 </head>
 <body>
-<form action="updateStudent" method="post">
-<br>
-Name
-<input type="text" name="name">
-<br>
-Address
-<input type="text" name="address">
-<br>
-Phone No
-<input type="text" name="phone">
-<br>
-<input type="submit" value="Submit">
-<br>
-</form>
+
 </body>
 </html>

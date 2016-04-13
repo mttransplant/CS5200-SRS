@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Login</title>
+<title>Insert title here</title>
 <style>
 #header {
 	background-color: black;
@@ -16,8 +16,8 @@
 #nav {
 	line-height: 30px;
 	background-color: #eeeeee;
-	height: 300px;
-	width: 100px;
+	height: 400px;
+	width: 200px;
 	float: left;
 	padding: 5px;
 }
@@ -47,30 +47,28 @@
 	<div id="header">
 		<h1>Northeastern University</h1>
 	</div>
-	<br>
-	<div id="section">
-		<form action="login" method="post">
-			<br>
-			<table>
-				<tr>
-					<td>UserId</td>
-					<td><input type="text" name="username"></td>
-				</tr>
-				<br>
-				<tr>
-					<td>Password</td>
-					<td><input type="password" name="password"></td>
-				</tr>
-				<tr>
-					<td style="text-align: center"><input type="submit"
-						value="Submit"></td>
-				</tr>
-			</table>
-			<br>
-		</form>
+
+	<div id="nav">
+		<a href="ViewStudentInfo.jsp">View Student Information</a><br> <a
+			href="AddClass.jsp">Add/Drop Class</a><br> <a
+			href="ViewTranscript.jsp">View Transcript</a><br> <a
+			href="ViewCourseOffer.jsp">View Course Offerings</a><br> <a
+			href="Login.jsp">Log Out</a><br>
 	</div>
 
+	<div id="section">
+		<br>
+		<%
+			if (request.getAttribute("Successful") != null) {
+				out.println(request.getAttribute("Successful"));
+			}
+			if (request.getAttribute("Failure") != null) {
+				out.println(request.getAttribute("Failure"));
+			}
+		%>
 
+	</div>
+
+	<div id="footer">Copyright © neu.edu</div>
 </body>
 </html>
-

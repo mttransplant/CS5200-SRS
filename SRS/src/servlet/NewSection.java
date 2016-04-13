@@ -7,19 +7,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import bean.InstructorBean;
+import bean.SectionBean;
+import dao.DbConnection;
 
 /**
- * Servlet implementation class Instructor
+ * Servlet implementation class NewSection
  */
-@WebServlet("/Instructor")
-public class Instructor extends HttpServlet {
+@WebServlet("/NewSection")
+public class NewSection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+       
     /**
-     * Default constructor. 
+     * @see HttpServlet#HttpServlet()
      */
-    public Instructor() {
+    public NewSection() {
+        super();
         // TODO Auto-generated constructor stub
     }
 
@@ -35,33 +37,27 @@ public class Instructor extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		response.setContentType("text/html");  
-		InstructorBean instructorBean = new InstructorBean();
-		instructorBean.setUserName(request.getParameter("username"));
-		instructorBean.setPassword(request.getParameter("password"));
-		Boolean result;
-		if(instructorBean.getUserName().equals("m.jones")&&instructorBean.getPassword().equals("jones"))
-		{
-			result = true;
-		}
-		else
-		{
-			result = false;
-		}
+		DbConnection connection = new DbConnection();
+		SectionBean sectionBean = new SectionBean();
+		
+		Boolean result = false;
+		sectionBean.setCourse(Integer.parseInt(request.getParameter("course")));
+		sectionBean.setSemester(request.getParameter("semester"));
+		sectionBean.setInstructor(Integer.parseInt(request.getParameter("instructor")));
+		result = connection.insertSection(sectionBean);
 		if(result)
 		{
-			request.setAttribute("result",result);
-			request.setAttribute("Successful", "Successful login");
+			
+			request.setAttribute("SuccessfulSection", "Section successfully inserted.");
 		}
 		else
 		{
-			request.setAttribute("result", result);
-			request.setAttribute("Failure", "Retry");
+			
+			request.setAttribute("FailureSection", "Section not inserted successfully.");
 		}
 		request.getRequestDispatcher("/Success.jsp").forward(request, response);
+		
 	}
-
-	
 
 }

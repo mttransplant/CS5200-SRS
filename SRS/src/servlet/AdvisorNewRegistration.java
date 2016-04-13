@@ -7,19 +7,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import bean.InstructorBean;
+import bean.RegistrationBean;
+import dao.DbConnection;
 
 /**
- * Servlet implementation class Instructor
+ * Servlet implementation class AdvisorNewRegistration
  */
-@WebServlet("/Instructor")
-public class Instructor extends HttpServlet {
+@WebServlet("/AdvisorNewRegistration")
+public class AdvisorNewRegistration extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+       
     /**
-     * Default constructor. 
+     * @see HttpServlet#HttpServlet()
      */
-    public Instructor() {
+    public AdvisorNewRegistration() {
+        super();
         // TODO Auto-generated constructor stub
     }
 
@@ -35,33 +37,26 @@ public class Instructor extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		response.setContentType("text/html");  
-		InstructorBean instructorBean = new InstructorBean();
-		instructorBean.setUserName(request.getParameter("username"));
-		instructorBean.setPassword(request.getParameter("password"));
-		Boolean result;
-		if(instructorBean.getUserName().equals("m.jones")&&instructorBean.getPassword().equals("jones"))
-		{
-			result = true;
-		}
-		else
-		{
-			result = false;
-		}
+		DbConnection connection = new DbConnection();
+		RegistrationBean registrationBean = new RegistrationBean();
+		
+		Boolean result = false;
+		registrationBean.setStudent(Integer.parseInt(request.getParameter("student")));
+		registrationBean.setSection(Integer.parseInt(request.getParameter("section")));
+		//registrationBean.setGrade(request.getParameter("grade"));
+		result = connection.insertRegistration(registrationBean);
 		if(result)
 		{
-			request.setAttribute("result",result);
-			request.setAttribute("Successful", "Successful login");
+			request.setAttribute("SuccessfulRegistration", "Registration successfull.");
 		}
 		else
 		{
-			request.setAttribute("result", result);
-			request.setAttribute("Failure", "Retry");
+			request.setAttribute("FailureRegistration", "Registration not successfull.");
 		}
-		request.getRequestDispatcher("/Success.jsp").forward(request, response);
+		request.getRequestDispatcher("/SuccessAdvisor.jsp").forward(request, response);
+		
+		
 	}
-
-	
 
 }

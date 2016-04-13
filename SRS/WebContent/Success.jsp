@@ -15,8 +15,8 @@
 #nav {
     line-height:30px;
     background-color:#eeeeee;
-    height:300px;
-    width:100px;
+    height:400px;
+    width:200px;
     float:left;
     padding:5px;	      
 }
@@ -47,16 +47,15 @@
 <div id="nav">
 <a href="AddNewStudent.jsp">Add Student</a><br>
 <a href="AddAdvisor.jsp">Add Advisor</a><br>
-<a href="AddCourse.jsp">Add Course</a><br>
-
+<a href="AddNewInstructor.jsp">Add Instructor</a><br>
+<a href="AddDepartment.jsp">Add Department</a><br>
+<a href="AddNewCourse.jsp">Add Course</a><br>
+<a href="AddNewRegistration.jsp">Add Registration</a><br>
+<a href="AddNewSection.jsp">Add Section</a><br>
+<a href="Login.jsp">Log Out</a><br>
 </div>
 
-
-
-
 <div id="section">
-
-
 <br>
 <%
 if(request.getAttribute("Successful")!=null)
@@ -67,9 +66,55 @@ if(request.getAttribute("Failure")!=null)
 {
 	out.println(request.getAttribute("Failure"));
 }
-
+if(request.getAttribute("SuccessfulAdvisor")!=null)
+{
+	out.println(request.getAttribute("SuccessfulAdvisor"));
+}
+if(request.getAttribute("FailureAdvisor")!=null)
+{
+	out.println(request.getAttribute("FailureAdvisor"));
+}
+if(request.getAttribute("SuccessfulDepartment")!=null)
+{
+	out.println(request.getAttribute("SuccessfulDepartment"));
+}
+if(request.getAttribute("FailureDepartment")!=null)
+{
+	out.println(request.getAttribute("FailureDepartment"));
+}
+if(request.getAttribute("SuccessfulInstructor")!=null)
+{
+	out.println(request.getAttribute("SuccessfulInstructor"));
+}
+if(request.getAttribute("FailureInstructor")!=null)
+{
+	out.println(request.getAttribute("FailureInstructor"));
+}
+if(request.getAttribute("SuccessfulCourse")!=null)
+{
+	out.println(request.getAttribute("SuccessfulCourse"));
+}
+if(request.getAttribute("FailureCourse")!=null)
+{
+	out.println(request.getAttribute("FailureCourse"));
+}
+if(request.getAttribute("SuccessfulRegistration")!=null)
+{
+	out.println(request.getAttribute("SuccessfulRegistration"));
+}
+if(request.getAttribute("FailureRegistration")!=null)
+{
+	out.println(request.getAttribute("FailureRegistration"));
+}
+if(request.getAttribute("SuccessfulSection")!=null)
+{
+	out.println(request.getAttribute("SuccessfulSection"));
+}
+if(request.getAttribute("FailureSection")!=null)
+{
+	out.println(request.getAttribute("FailureSection "));
+}
 %>
-
 </div>
 
 <div id="footer">

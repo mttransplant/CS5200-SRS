@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Add Advisor</title>
+<title>Insert title here</title>
 <style>
 #header {
     background-color:black;
@@ -57,27 +57,15 @@
 
 <div id="section">
 <br>
-<form name="AddAdvisor" action="addAdvisor" method="post">
+<form name="AddDepartment" action="addDepartment" method="post">
 <table>
 <tr>
-<td>First Name</td> 
-<td> <input type="text" name="fName"></td>
-</tr>
-<tr>
-<td> Last Name </td>
-<td> <input type="text" name="lName"></td>
-</tr>
-<tr>
-<td> Email </td>
-<td> <input type="text" name="email"></td>
+<td>Name</td> 
+<td> <input type="text" name="name"></td>
 </tr>
 <tr>
 <td> Phone </td>
 <td> <input type="text" name="phone"> </td>
-</tr>
-<tr>
-<td> UserName </td>
-<td> <input type="text" name="username"> </td>
 </tr>
 <tr><td style="text-align:center">
 <input type="submit" value="Submit"></td></tr>
@@ -91,12 +79,9 @@ Copyright © neu.edu
 </body>
 </html>
 
-<!-- Create table Advisor
+<!-- create table Department
 (
 	id int primary key auto_increment,
- 	fName varchar(255) not null,
-	lName varchar(255) not null,
-	email varchar(255) unique,
-	phone varchar(10),
-	username varchar(255)
+	name varchar(255) not null,
+	phoneNumber varchar(10)
 ); -->

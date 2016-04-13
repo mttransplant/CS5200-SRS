@@ -19,7 +19,7 @@
     <servlet-name>AddStudent</servlet-name>
     <url-pattern>/addNewStudent</url-pattern>
   </servlet-mapping>
-   <servlet>
+  <servlet>
     <servlet-name>NewStudent</servlet-name>
     <servlet-class>servlet.NewStudent</servlet-class>
   </servlet>
@@ -27,12 +27,125 @@
     <servlet-name>NewStudent</servlet-name>
     <url-pattern>/addStudent</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>AddAdvisor</servlet-name>
+    <servlet-class>servlet.AddAdvisor</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AddAdvisor</servlet-name>
+    <url-pattern>/addAdvisor</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>AddDepartment</servlet-name>
+    <servlet-class>servlet.AddDepartment</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AddDepartment</servlet-name>
+    <url-pattern>/addDepartment</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>AddInstructor</servlet-name>
+    <servlet-class>servlet.AddInstructor</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AddInstructor</servlet-name>
+    <url-pattern>/addNewInstructor</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>NewInstructor</servlet-name>
+    <servlet-class>servlet.NewInstructor</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NewInstructor</servlet-name>
+    <url-pattern>/addInstructor</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>AddCourse</servlet-name>
+    <servlet-class>servlet.AddCourse</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AddCourse</servlet-name>
+    <url-pattern>/addNewCourse</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>NewCourse</servlet-name>
+    <servlet-class>servlet.NewCourse</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NewCourse</servlet-name>
+    <url-pattern>/addCourse</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>AddRegistration</servlet-name>
+    <servlet-class>servlet.AddRegistration</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AddRegistration</servlet-name>
+    <url-pattern>/addNewRegistration</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>NewRegistration</servlet-name>
+    <servlet-class>servlet.NewRegistration</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NewRegistration</servlet-name>
+    <url-pattern>/addRegistration</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>AddSection</servlet-name>
+    <servlet-class>servlet.AddSection</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AddSection</servlet-name>
+    <url-pattern>/addNewSection</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>NewSection</servlet-name>
+    <servlet-class>servlet.NewSection</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>NewSection</servlet-name>
+    <url-pattern>/addSection</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>AdvisorRegistration</servlet-name>
+    <servlet-class>servlet.AdvisorRegistration</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdvisorRegistration</servlet-name>
+    <url-pattern>/advisorNewRegistration</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>AdvisorNewRegistration</servlet-name>
+    <servlet-class>servlet.AdvisorNewRegistration</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdvisorNewRegistration</servlet-name>
+    <url-pattern>/advisorRegistration</url-pattern>
+  </servlet-mapping>
    <servlet>
-   <servlet-name>ViewStudentInfo</servlet-name>
-   <servlet-class>servlet.ViewStudentInfo</servlet-class>
- </servlet>
- <servlet-mapping>
-   <servlet-name>ViewStudentInfo</servlet-name>
-   <url-pattern>/viewStudent</url-pattern>
- </servlet-mapping>
+    <servlet-name>AdvisorViewStudentInformation</servlet-name>
+    <servlet-class>servlet.AdvisorViewStudentInformation</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdvisorViewStudentInformation</servlet-name>
+    <url-pattern>/advisorStudentInformation</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>ViewStudentInfo</servlet-name>
+    <servlet-class>servlet.ViewStudentInfo</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ViewStudentInfo</servlet-name>
+    <url-pattern>/viewStudent</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ViewCourseOffer</servlet-name>
+    <servlet-class>servlet.ViewCourseOffer</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ViewCourseOffer</servlet-name>
+    <url-pattern>/ViewCourseOffer</url-pattern>
+  </servlet-mapping>
 </web-app>

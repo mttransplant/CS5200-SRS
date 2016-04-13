@@ -7,19 +7,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import bean.InstructorBean;
+import bean.AdvisorBean;
+import bean.StudentBean;
+import dao.DbConnection;
 
 /**
- * Servlet implementation class Instructor
+ * Servlet implementation class AddAdvisor
  */
-@WebServlet("/Instructor")
-public class Instructor extends HttpServlet {
+@WebServlet("/AddAdvisor")
+public class AddAdvisor extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+       
     /**
-     * Default constructor. 
+     * @see HttpServlet#HttpServlet()
      */
-    public Instructor() {
+    public AddAdvisor() {
+        super();
         // TODO Auto-generated constructor stub
     }
 
@@ -37,31 +40,24 @@ public class Instructor extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		response.setContentType("text/html");  
-		InstructorBean instructorBean = new InstructorBean();
-		instructorBean.setUserName(request.getParameter("username"));
-		instructorBean.setPassword(request.getParameter("password"));
-		Boolean result;
-		if(instructorBean.getUserName().equals("m.jones")&&instructorBean.getPassword().equals("jones"))
-		{
-			result = true;
-		}
-		else
-		{
-			result = false;
-		}
+		DbConnection connection = new DbConnection();
+		AdvisorBean advisorBean = new AdvisorBean();
+	
+		Boolean result = false;
+		advisorBean.setfName(request.getParameter("fName"));
+		advisorBean.setlName(request.getParameter("lName"));
+		advisorBean.setEmail(request.getParameter("email"));
+		advisorBean.setPhoneNo(request.getParameter("phone"));
+		advisorBean.setUserName(request.getParameter("username"));
+		result = connection.insertAdvisor(advisorBean);
 		if(result)
 		{
-			request.setAttribute("result",result);
-			request.setAttribute("Successful", "Successful login");
+			request.setAttribute("SuccessfulAdvisor", "Advisor successfully inserted.");
 		}
 		else
 		{
-			request.setAttribute("result", result);
-			request.setAttribute("Failure", "Retry");
+			request.setAttribute("FailureAdvisor", "Advisor not inserted successfully.");
 		}
 		request.getRequestDispatcher("/Success.jsp").forward(request, response);
 	}
-
-	
-
 }
