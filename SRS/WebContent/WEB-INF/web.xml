@@ -123,7 +123,7 @@
     <servlet-name>AdvisorNewRegistration</servlet-name>
     <url-pattern>/advisorRegistration</url-pattern>
   </servlet-mapping>
-   <servlet>
+  <servlet>
     <servlet-name>AdvisorViewStudentInformation</servlet-name>
     <servlet-class>servlet.AdvisorViewStudentInformation</servlet-class>
   </servlet>
@@ -131,7 +131,6 @@
     <servlet-name>AdvisorViewStudentInformation</servlet-name>
     <url-pattern>/advisorStudentInformation</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>ViewStudentInfo</servlet-name>
     <servlet-class>servlet.ViewStudentInfo</servlet-class>
@@ -148,6 +147,15 @@
     <servlet-name>ViewCourseOffer</servlet-name>
     <url-pattern>/ViewCourseOffer</url-pattern>
   </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>ViewRoster</servlet-name>
+    <servlet-class>servlet.ViewRoster</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ViewRoster</servlet-name>
+    <url-pattern>/viewRoster</url-pattern>
+  </servlet-mapping>
   <servlet>
     <servlet-name>AssignGrade</servlet-name>
     <servlet-class>servlet.AssignGrade</servlet-class>
@@ -156,4 +164,5 @@
     <servlet-name>AssignGrade</servlet-name>
     <url-pattern>/assignGrade</url-pattern>
   </servlet-mapping>
+  
 </web-app>

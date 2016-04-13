@@ -57,18 +57,9 @@
 
 <div id="section">
 <br>
-<%
-if(request.getAttribute("Successful")!=null)
-{
-	out.println(request.getAttribute("Successful"));
-}
-if(request.getAttribute("Failure")!=null)
-{
-	out.println(request.getAttribute("Failure"));
-}
-
-%>
-
+<form name="ViewRoster" action="viewRoster" method="post">
+<input type="submit" value="View Roster">
+</form>
 </div>
 
 <div id="footer">

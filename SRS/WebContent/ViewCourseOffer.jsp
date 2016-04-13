@@ -25,7 +25,7 @@ for(CourseBean b: courseList){
  <tr>
  <td>
 <th> CourseNumber: <p><%= b.getCourseNo()%> </th></p><br>	
-<th> Title: <p><%= b.getTitle()%> </th> </p><br>
+<th> Title: <p><%= b.getCourseNo()%> </th> </p><br>
 <th> Description: <p><%= b.getDescription()%> </th> </p><br>	
 <th> CourseLevel: <p><%= b.getCourseLevel()%> </th> </p><br>	
 <th> Department: <p><%= b.getDepartment()%> </th> </p><br>	
