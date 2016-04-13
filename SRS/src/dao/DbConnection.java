@@ -979,6 +979,56 @@ public ArrayList<RosterBean> viewRoster(InstructorBean instructor) {
 		return roster;
 	}
 
+public int assignGrade(RegistrationBean registration) {
+	
+	Connection con = null;
+	String url="jdbc:mysql://localhost:3306/";
+	String dbName ="SRS";
+	String username = "l.smith";
+	String password = "smith";
+	int result = 0;
+	
+	try
+	{
+		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		con = DriverManager.getConnection(url+dbName,username,password);
+		
+		
+		PreparedStatement ps = con.prepareStatement( "update InstructorSetGrade set grade= ? where section = ? and student = ?;");  
+		ps.setString(1, registration.getGrade());
+		ps.setInt(2, registration.getSection());
+		ps.setInt(3, registration.getStudent());
+		
+		
+		result = ps.executeUpdate();
+		
+	    ps.close();
+	    
+	}
+	catch (SQLException e2) {
+		e2.printStackTrace();
+		
+	} 
+	catch (InstantiationException e) {
+		e.printStackTrace();
+	} 
+	catch (IllegalAccessException e) {
+		e.printStackTrace();
+	} 
+	catch (ClassNotFoundException e) {
+		e.printStackTrace();
+	}   	
+	finally	{
+		try {
+			con.close();
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	return result;
+}
+
 	public ArrayList<CourseBean> viewCourseOffer()
 	{
 		

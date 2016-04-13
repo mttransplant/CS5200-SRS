@@ -148,4 +148,12 @@
     <servlet-name>ViewCourseOffer</servlet-name>
     <url-pattern>/ViewCourseOffer</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>AssignGrade</servlet-name>
+    <servlet-class>servlet.AssignGrade</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AssignGrade</servlet-name>
+    <url-pattern>/assignGrade</url-pattern>
+  </servlet-mapping>
 </web-app>
