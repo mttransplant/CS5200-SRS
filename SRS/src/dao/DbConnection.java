@@ -11,6 +11,7 @@ import com.mysql.jdbc.ResultSet;
 import bean.AdminBean;
 import bean.StudentBean;
 import bean.InstructorBean;
+import bean.RosterBean;
 
 public class DbConnection {
 
@@ -334,13 +335,15 @@ public class DbConnection {
 //			return false;
 		return sbean;
 	}  
-/*
-	public ResultSet viewRoster(String username, String password) {
+
+	public ArrayList<RosterBean> viewRoster(InstructorBean instructor) {
 		// TODO create roster object
 		Connection con = null;
 		String url="jdbc:mysql://localhost:3306/";
 		String dbName ="SRS";
-		
+		String username = instructor.getUsername();
+		String password = instructor.getPassword();
+		ArrayList<RosterBean> roster = new ArrayList<RosterBean>();
 		
 		try
 		{
@@ -351,11 +354,30 @@ public class DbConnection {
 			
 			ResultSet rs = (ResultSet) ps.executeQuery();
 			
+			while(rs.next()) {
+				RosterBean entry = new RosterBean();
+				entry.setSectionID(rs.getInt("sectionID"));
+				entry.setCourseNumber(rs.getString("courseNumber"));
+				entry.setTitle(rs.getString("title"));
+				entry.setSemester(rs.getString("semester"));
+				entry.setStudentID(rs.getString("studentID"));
+				entry.setStudentFN(rs.getString("studentFN"));
+				entry.setStudentLN(rs.getString("studentLN"));
+				entry.setStudentMajor(rs.getString("studentMajor"));
+				entry.setStudentGrade(rs.getString("studentGrade"));
+				entry.setInstructorFN(rs.getString("instructorFN"));;
+				entry.setInstructorLN(rs.getString("instructorLN"));
+				
+				roster.add(entry);
+			}
+			
+			
+			
 			rs.close();
 		    ps.close();
 			
 		    // TODO build return statement
-
+		    
 		}
 		catch (SQLException e2) {
 			e2.printStackTrace();
@@ -368,8 +390,7 @@ public class DbConnection {
 		} 
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();
-		}   
-		
+		}   	
 		finally	{
 			try {
 				con.close();
@@ -378,7 +399,6 @@ public class DbConnection {
 				e.printStackTrace();
 			}
 		}
-
+		return roster;
 	}
-*/
 }
