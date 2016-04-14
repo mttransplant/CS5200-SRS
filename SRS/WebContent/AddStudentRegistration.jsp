@@ -5,50 +5,23 @@
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Student Add Registration</title>
-        <style>
-        #header {
-          background-color:black;
-          color:white;
-          text-align:center;
-          padding:5px;
-        }
-        #nav {
-          line-height:30px;
-          background-color:#eeeeee;
-          height:400px;
-          width:200px;
-          float:left;
-          padding:5px;
-        }
-        #section {
-          width:350px;
-          float:left;
-          padding:10px;
-        }
-        #section1 {
-          width:350px;
-          float:left;
-          padding:10px;
-        }
-        #footer {
-          background-color:black;
-          color:white;
-          clear:both;
-          text-align:center;
-          padding:5px;
-        }
-        </style>
+
+<%@ include file="Styles.jsp" %>
+
       </head>
       <body>
         <div id="header">
           <h1>Northeastern University</h1>
         </div>
+        
+<%@ include file="StudentNav.jsp" %>
+    <!-- 
 	<div id="nav">
 		<a href="ViewStudentInfo.jsp">View Student Information</a><br> <a
 			href="AddStudentRegistration.jsp">Add/Drop Class</a><br> <a
 			href="ViewCourseOffer">View Course Offerings</a><br> <a
 			href="Login.jsp">Log Out</a><br>
-	</div>
+	</div> -->
 
 
 

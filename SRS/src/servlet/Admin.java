@@ -17,7 +17,7 @@ public class Admin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     /**
-     * Default constructor. 
+     * Default constructor.
      */
     public Admin() {
         // TODO Auto-generated constructor stub
@@ -35,8 +35,8 @@ public class Admin extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		response.setContentType("text/html");  
+
+		response.setContentType("text/html");
 		AdminBean adminBean = new AdminBean();
 		adminBean.setUserName(request.getParameter("username"));
 		System.out.println("admin  :"+adminBean.getUserName());
@@ -67,7 +67,7 @@ public class Admin extends HttpServlet {
 		{
 			user = "unauthenticated";
 		}
-		
+
 		System.out.println("user"+user);
 		switch(user)
 		{
@@ -105,11 +105,11 @@ public class Admin extends HttpServlet {
 			request.setAttribute("Failure", "Retry");
 			request.getRequestDispatcher("/Login.jsp").forward(request, response);
 		}
-		
+
 		/*if(result)
 		{
 			request.setAttribute("result",result);
-			request.setAttribute("Successful", "Successfull login");
+			request.setAttribute("Successful", "Successful login");
 		}
 		else
 		{
@@ -119,6 +119,6 @@ public class Admin extends HttpServlet {
 		request.getRequestDispatcher("/Success.jsp").forward(request, response);*/
 	}
 
-	
+
 
 }

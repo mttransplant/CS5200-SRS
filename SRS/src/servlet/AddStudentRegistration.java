@@ -18,7 +18,7 @@ import bean.RegistrationBean;
 @WebServlet("/AddStudentRegistration")
 public class AddStudentRegistration extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -39,28 +39,28 @@ public class AddStudentRegistration extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");  
+		response.setContentType("text/html");
 		DbConnection connection = new DbConnection();
 		RegistrationBean registration = new RegistrationBean();
 		registration.setSection(Integer.parseInt(request.getParameter("section")));
 		registration.setStudent(Integer.parseInt(request.getParameter("student")));
 		Boolean result = false;
 		result = connection.insertRegistration(registration);
-		
+
 		if(result)
 		{
-			request.setAttribute("Successful", "Registration successfull.");
+			request.setAttribute("Successful", "Registration successful.");
 		}
 		else
 		{
-			request.setAttribute("Failure", "Registration not successfull.");
+			request.setAttribute("Failure", "Registration not successful.");
 		}
 		request.getRequestDispatcher("/SuccessStudent.jsp").forward(request, response);
 	}
-/*create table Registration 
+/*create table Registration
 	(
 	student int,
-	foreign key (student) references Student(id) 
+	foreign key (student) references Student(id)
 		on update cascade on delete cascade,
 	section int,
     foreign key (section) references Section(id)

@@ -16,7 +16,7 @@ import dao.DbConnection;
 @WebServlet("/AssignGrade")
 public class AssignGrade extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -37,29 +37,29 @@ public class AssignGrade extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");  
+		response.setContentType("text/html");
 		DbConnection connection = new DbConnection();
 		RegistrationBean registrationBean = new RegistrationBean();
-		
+
 		int result;
 		registrationBean.setStudent(Integer.parseInt(request.getParameter("student")));
 		registrationBean.setSection(Integer.parseInt(request.getParameter("section")));
 		registrationBean.setGrade(request.getParameter("grade"));
 		result = connection.assignGrade(registrationBean);
 		System.out.println(result);
-		
+
 		if(result==1)
 		{
-			request.setAttribute("Successful", "Grade assignment successfull.");
+			request.setAttribute("Successful", "Grade assignment successful.");
 		}
 		else
 		{
-			request.setAttribute("Failure", "Grade assignment not successfull.");
+			request.setAttribute("Failure", "Grade assignment not successful.");
 		}
 		request.getRequestDispatcher("/SuccessInstructor.jsp").forward(request, response);
-		
-		
-		
+
+
+
 	}
 
 }

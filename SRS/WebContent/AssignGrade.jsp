@@ -5,43 +5,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Assign A Grade</title>
-<style>
-#header {
-	background-color: black;
-	color: white;
-	text-align: center;
-	padding: 5px;
-}
 
-#nav {
-	line-height: 30px;
-	background-color: #eeeeee;
-	height: 400px;
-	width: 200px;
-	float: left;
-	padding: 5px;
-}
+<%@ include file="Styles.jsp" %>
 
-#section {
-	width: 350px;
-	float: left;
-	padding: 10px;
-}
-
-#section1 {
-	width: 350px;
-	float: left;
-	padding: 10px;
-}
-
-#footer {
-	background-color: black;
-	color: white;
-	clear: both;
-	text-align: center;
-	padding: 5px;
-}
-</style>
 </head>
 <body>
 	<div id="header">
@@ -49,12 +15,7 @@
 	</div>
 
 
-<div id="nav">
-<a href="ViewRoster.jsp">View Roster</a><br>
-<a href="AssignGrade.jsp">Assign Grade</a><br>
-<a href="ViewInstructorInformation.jsp">View Instructor Information</a><br>
-<a href="Login.jsp">Log Out</a><br>
-</div>
+<%@ include file="InstructorNav.jsp" %>
 
 	<div id="section">
 		

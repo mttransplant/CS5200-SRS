@@ -16,7 +16,7 @@ import dao.DbConnection;
 @WebServlet("/AdvisorNewRegistration")
 public class AdvisorNewRegistration extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -37,10 +37,10 @@ public class AdvisorNewRegistration extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");  
+		response.setContentType("text/html");
 		DbConnection connection = new DbConnection();
 		RegistrationBean registrationBean = new RegistrationBean();
-		
+
 		Boolean result = false;
 		registrationBean.setStudent(Integer.parseInt(request.getParameter("student")));
 		registrationBean.setSection(Integer.parseInt(request.getParameter("section")));
@@ -48,15 +48,15 @@ public class AdvisorNewRegistration extends HttpServlet {
 		result = connection.insertRegistration(registrationBean);
 		if(result)
 		{
-			request.setAttribute("SuccessfulRegistration", "Registration successfull.");
+			request.setAttribute("SuccessfulRegistration", "Registration successful.");
 		}
 		else
 		{
-			request.setAttribute("FailureRegistration", "Registration not successfull.");
+			request.setAttribute("FailureRegistration", "Registration not successful.");
 		}
 		request.getRequestDispatcher("/SuccessAdvisor.jsp").forward(request, response);
-		
-		
+
+
 	}
 
 }
