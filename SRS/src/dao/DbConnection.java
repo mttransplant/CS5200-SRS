@@ -809,8 +809,8 @@ public class DbConnection {
 		Connection con = null;
 		String url="jdbc:mysql://localhost:3306/";
 		String dbName ="SRS";
-		String userName= "root";
-		String password= "Mishu123!";
+		String userName= "admin";
+		String password= "admin";
 		StudentBean sbean = new StudentBean();
 		String fName="";
 		String lName = "";

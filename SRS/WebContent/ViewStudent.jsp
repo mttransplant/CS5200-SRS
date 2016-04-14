@@ -51,7 +51,6 @@
 	<div id="nav">
 		<a href="ViewStudentInfo.jsp">View Student Information</a><br> <a
 			href="AddClass.jsp">Add/Drop Class</a><br> <a
-			href="ViewTranscript.jsp">View Transcript</a><br> <a
 			href="ViewSchedule.jsp">View Schedule</a><br> <a
 			href="Login.jsp">Log Out</a><br>
 	</div>

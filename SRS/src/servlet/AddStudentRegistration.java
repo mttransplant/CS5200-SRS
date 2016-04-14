@@ -1,7 +1,7 @@
 package servlet;
 
 import java.io.IOException;
-import java.util.ArrayList;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dao.DbConnection;
+import bean.RegistrationBean;
 
 /**
  * Servlet implementation class AddRegistration
@@ -40,11 +41,21 @@ public class AddStudentRegistration extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");  
 		DbConnection connection = new DbConnection();
-		//ArrayList<Integer> students = connection.getStudent();
-		ArrayList<Integer> sections = connection.getSection();
-		//request.setAttribute("students", students);
-		request.setAttribute("sections", sections);
-		request.getRequestDispatcher("/AddStudentRegistration.jsp").forward(request, response);
+		RegistrationBean registration = new RegistrationBean();
+		registration.setSection(Integer.parseInt(request.getParameter("section")));
+		registration.setStudent(Integer.parseInt(request.getParameter("student")));
+		Boolean result = false;
+		result = connection.insertRegistration(registration);
+		
+		if(result)
+		{
+			request.setAttribute("Successful", "Registration successfull.");
+		}
+		else
+		{
+			request.setAttribute("Failure", "Registration not successfull.");
+		}
+		request.getRequestDispatcher("/SuccessStudent.jsp").forward(request, response);
 	}
 /*create table Registration 
 	(
