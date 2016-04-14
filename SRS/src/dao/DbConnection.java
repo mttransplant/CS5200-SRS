@@ -913,6 +913,87 @@ public class DbConnection {
 		return sbean;
 	}  
 	
+	public InstructorBean viewInstructorInfo(String id)
+	{
+	  
+	  Connection con = null;
+	  String url="jdbc:mysql://localhost:3306/";
+	  String dbName ="SRS";
+	  String userName= "admin";
+	  String password= "admin";
+	  InstructorBean ibean = new InstructorBean();
+	  String fName="";
+	  String lName = "";
+	  String email="";
+	  int department = 0;
+	  String username="";	
+	  
+	  
+	  //String sID = "";
+	  
+	  try
+	  {
+	    Class.forName("com.mysql.jdbc.Driver").newInstance();
+	    con = DriverManager.getConnection(url+dbName,userName,password);
+	    //System.out.println("Connected to the database");
+	    PreparedStatement ps=con.prepareStatement( "select * from Instructor where id = ?");  
+	    
+	    ps.setString(1, id);
+	    
+	    ResultSet rs = (ResultSet) ps.executeQuery();
+	    
+	    //while (rs.next()) {
+	    if(rs.next()){	
+	      fName = rs.getString("fName");
+	      lName = rs.getString("lName");
+	      email = rs.getString("email");
+	      department = rs.getInt("department");
+	      username = rs.getString("username");
+	      
+	    }
+	    
+	    ibean.setfName(fName);
+	    ibean.setlName(lName);
+	    ibean.setEmail(email);
+	    ibean.setDepartment(department);
+	    ibean.setUserName(username);
+	    
+	    //i=ps.executeUpdate();  
+	    rs.close();
+	    ps.close();
+	    con.close();
+	    
+	  }
+	  catch (SQLException e2) {
+	    e2.printStackTrace();
+	  } catch (InstantiationException e) {
+	    
+	    e.printStackTrace();
+	  } catch (IllegalAccessException e) {
+	    
+	    e.printStackTrace();
+	  } catch (ClassNotFoundException e) {
+	    
+	    e.printStackTrace();
+	  }   
+	  finally
+	  {
+	    try {
+	      
+	      con.close();
+	      
+	    } catch (SQLException e) {
+	      
+	      e.printStackTrace();
+	    }
+	  }
+	  //		if(i>0)  
+	  //			return true;
+	  //		else
+	  //			return false;
+	  return ibean;
+	}  
+	
 public ArrayList<RosterBean> viewRoster() {
 		
 		Connection con = null;
@@ -927,7 +1008,7 @@ public ArrayList<RosterBean> viewRoster() {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			con = DriverManager.getConnection(url+dbName,username,password);
 			
-			PreparedStatement ps=con.prepareStatement( "select * from InstructorRoster");  
+			PreparedStatement ps = con.prepareStatement( "select * from InstructorRoster");  
 			
 			ResultSet rs = (ResultSet) ps.executeQuery();
 			
@@ -976,6 +1057,7 @@ public ArrayList<RosterBean> viewRoster() {
 				e.printStackTrace();
 			}
 		}
+		
 		return roster;
 	}
 

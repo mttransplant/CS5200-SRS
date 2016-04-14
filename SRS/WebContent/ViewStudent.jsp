@@ -30,8 +30,8 @@
 			String state = String.valueOf(request.getAttribute("state"));
 			String country = String.valueOf(request.getAttribute("country"));
 			String phoneNo = String.valueOf(request.getAttribute("phoneNo"));
-			int advisor = Integer.parseInt(request.getAttribute("advisor").toString());
-			int yearOfGraduation = Integer.parseInt(request.getAttribute("yearOfGraduation").toString());
+			//int advisor = Integer.parseInt(request.getAttribute("advisor").toString());
+			//int yearOfGraduation = Integer.parseInt(request.getAttribute("yearOfGraduation").toString());
 		%>
 
 		<table border="1">
@@ -43,9 +43,9 @@
 				<th>State</th>
 				<th>Postal</th>
 				<th>Country</th>
-				<th>Advisor</th>
+				
 				<th>Phone Number</th>
-				<th>Year of Graduation</th>
+				
 			</tr>
 
 			<tr>
@@ -64,9 +64,9 @@
 				<td><%=state%></td>
 				<td><%=postal%></td>
 				<td><%=country%></td>
-				<td><%=advisor%></td>
+				
 				<td><%=phoneNo%></td>
-				<td><%=yearOfGraduation%></td>
+				
 			</tr>
 		</table>
 	</div>

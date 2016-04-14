@@ -12,6 +12,15 @@
     <url-pattern>/login</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>ViewInstructorInfo</servlet-name>
+    <servlet-class>servlet.ViewInstructorInfo</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ViewInstructorInfo</servlet-name>
+    <url-pattern>/viewInstructorInfo</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
     <servlet-name>AddStudentRegistration</servlet-name>
     <servlet-class>servlet.AddStudentRegistration</servlet-class>
   </servlet>

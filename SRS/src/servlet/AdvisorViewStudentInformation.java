@@ -29,17 +29,12 @@ public class AdvisorViewStudentInformation extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		String id = request.getParameter("studentId");
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+		String id = "1";
 		DbConnection connection = new DbConnection();
 		StudentBean bean = connection.viewStudentInfo(id);
-		//request.setAttribute("bean", bean);
+		
 		request.setAttribute("fname",bean.getFirstName());
 		request.setAttribute("lname",bean.getLastName());
 		request.setAttribute("address1",bean.getAddress1());
@@ -52,6 +47,15 @@ public class AdvisorViewStudentInformation extends HttpServlet {
 		request.setAttribute("advisor",bean.getAdvisor());
 		request.setAttribute("yearOfGraduation",bean.getYearOfGraduation());
 		request.getRequestDispatcher("/AdvisorViewStudentInformation.jsp").forward(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+
 	}
 
 }
