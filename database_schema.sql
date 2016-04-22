@@ -1,3 +1,6 @@
+-- Group 17
+-- Swati Soni, Shikha Singh, Adam Smith, Chander Mohan
+
 drop database if exists SRS;
 create database SRS;
 use SRS;
